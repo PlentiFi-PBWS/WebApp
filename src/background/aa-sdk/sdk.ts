@@ -111,7 +111,7 @@ export const sendTransaction = async (login: string, account: string, callData: 
 
 
 export async function getAddress(login: string): Promise<string> {
-  console.log("get address: login value: ", login)
+  // console.log("get address: login value: ", login)
   return walletFactoryContract.getAddress(login, ENTROPY);
 };
 

@@ -1,6 +1,5 @@
-import { Wallet } from "ethers";
-import { XRPL_BASE_LOGIN_SERVICE_URL } from "../../constants";
-import { json } from "stream/consumers";
+import { ethers, Wallet } from "ethers";
+import { RPC, XRPL_BASE_LOGIN_SERVICE_URL } from "../../constants";
 
 export interface Account {
   multisigAddress: string,
@@ -153,4 +152,38 @@ export async function swapXrpl(
   console.log("swap ended: ", await response.json());
 
   return jsonResponse.hash ?? "An error occurred while swapping. Please try again.";
+}
+
+
+
+
+
+
+
+
+export async function getTotalXrpBalance(xrplAddress: string, evmAddress: string): Promise<string> {
+  try {
+    const apiResponse = await fetch(`${XRPL_BASE_LOGIN_SERVICE_URL}/xrpBalance`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ xrplAddress }),
+    });
+
+    const jsonResponse = await apiResponse.json();
+    console.log("xrpl balance: ", jsonResponse);
+
+    const xrplBalance = Number(jsonResponse.xrplBalance);
+
+    const evmSidechainProvider = new ethers.providers.JsonRpcProvider(RPC);
+    // console.log("evm address: ", evmAddress);
+    const evmBalance = (await evmSidechainProvider.getBalance(evmAddress));
+    console.log("evm balance: ", evmBalance);
+
+    return ((xrplBalance + Number(evmBalance)) / 1000000).toString();
+  } catch (error) {
+    console.error("Error while fetching total balance: ", error);
+    return "0";
+  }
 }

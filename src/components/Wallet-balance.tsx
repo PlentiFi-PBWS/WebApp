@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { IoIosShareAlt, IoIosSend, IoMdCopy } from "react-icons/io";
 import './Wallet-balance.scss'; // Ensure this is the correct path to your styles
-import { AVAILABLE_TOKENS, LOGIN_KEY, SMART_ACCOUNT_KEY } from '../constants';
+import { AVAILABLE_TOKENS, LOGIN_KEY, SMART_ACCOUNT_KEY, XRPL_SMART_ACCOUNT_KEY } from '../constants';
 // Importing the WebP image
 import myWebPImage from "../images/pdp.png";
 import { get } from 'http';
 import { ethers } from 'ethers';
 import { provider } from '../background/aa-sdk/providers';
 import { getEthBalance } from '../background/aa-sdk';
+import { getAddress } from '../background/aa-sdk/sdk';
+import { getTotalXrpBalance } from '../background/xrplSdk';
 
 
 type Props = {
@@ -37,12 +39,27 @@ const CryptoBalance = (props: Props) => {
     style: 'currency',
     currency: 'USD'
   }).format(0));
+  const [xrpBalance, setXrpBalance] = useState('0');
 
   useEffect(() => {
     // Define the function that fetches assets
     const fetchAssets = async () => {
-
       const assetOwner = localStorage.getItem(SMART_ACCOUNT_KEY);
+
+      // Get the asset owner from local storage
+      const multiSigAddress = localStorage.getItem(XRPL_SMART_ACCOUNT_KEY);
+      if (!multiSigAddress) {
+        console.log("Asset owner not set");
+        return;
+      }
+
+      // console.log("Asset owner: ", assetOwner);
+      const evmAddress = await getAddress(assetOwner!);
+
+      const xrpBalance = await getTotalXrpBalance(multiSigAddress, evmAddress);
+
+      setXrpBalance(xrpBalance);
+
       if (!assetOwner) {
         console.log("Asset owner not set");
         return;
@@ -86,7 +103,7 @@ const CryptoBalance = (props: Props) => {
   };
 
   const XrpTotal = () => {
-   getEthBalance(props.addresses[0])
+    getEthBalance(props.addresses[0])
   }
 
   // Check if addresses is an array and has more than one address
@@ -113,7 +130,7 @@ const CryptoBalance = (props: Props) => {
           <div className="address">{localStorage.getItem(LOGIN_KEY) ?? 'No Account set'} <IoMdCopy className="icon" onClick={() => onCopyToClipboard(props.addresses[0])} /></div>
         )}
         <div className="balance">{sum}</div>
-        <div>34.8 XRP</div>
+        <div>{xrpBalance} XRP</div>
         <div className={`change ${1 >= 0 ? 'positive' : 'negative'}`}>
         </div>
       </div>
