@@ -11,6 +11,7 @@ import Swap from "../components/swap/Swap";
 import { useParams } from "react-router-dom";
 import FavAssetDisplay from "../components/listFavAsset/FavAssetDisplay";
 import { AVAILABLE_TOKENS } from "../constants";
+import AssetCard from "../components/AssetCards/AssetCards";
 
 // const mySwapFunction = (fromAmount, fromCurrency, toAmount, toCurrency) => {
 //   // logique pour swap
@@ -38,12 +39,36 @@ const Invest = () => {
       : 0;
   // If the asset is not found, you could redirect or show an error message
   // For simplicity, this example will just return null
-  if (!selectedAsset) return null;
 
   // Function to toggle the favorite state
   const toggleFavorite = () => {
     setIsFavorited(!isFavorited);
   };
+
+  const defaultView = (
+    <div className="default-view">
+      <h2>Welcome to the Investment Page</h2>
+      <p>Select an asset to get started</p>
+      <div className="asset-cards-container">
+            {AVAILABLE_TOKENS.map((asset) => (
+              <AssetCard key={asset.ticker} asset={asset} />
+            ))}
+          </div>
+    </div>
+  );
+
+  if (!selectedAsset) {
+    // Render the default view if no specific asset is selected
+    return (
+      <div>
+        <Sidebar address="Qn4H232123212132123212" name="Test" />
+        <Navbar address="Qn4H232123212132123212" name="Test" />
+        <div className="containerd">
+          {defaultView}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div>
