@@ -1,0 +1,59 @@
+{
+  "version": "0.0.0",
+  "accounts": {
+    "current": "address of the current account",
+    "available": {
+      "11155111": {
+        "address of account x": {
+          "address": "address of account x",
+          "privateKey": "private key of account x",
+          "name": "name of account x",
+          "data": {
+            "balances": {
+              "token Address or native currency ticker": "amount of token in the smallest unit"
+            }
+          },
+          "nonce": "nonce of account x",
+          "txHistory": {
+            "txHash": {
+              "from": "address of sender",
+              "to": "address of receiver",
+              "amount": "amount of the native currency in the smallest unit",
+              "type": "type of transaction (transfer, approve, ...)"
+            }
+          }
+        }
+      }
+    }
+  },
+  "network": {
+    "activeNetwork": {
+      "chainID": "11155111",
+      "family": "EVM",
+      "name": "Sepolia",
+      "provider": "https://sepolia.infura.io/v3/bdabe9d2f9244005af0f566398e648da",
+      "baseAsset": {
+        "symbol": "ETH",
+        "name": "ETH",
+        "decimals": 18,
+        "image": "https://ethereum.org/static/6b935ac0e6194247347855dc3d328e83/6ed5f/eth-diamond-black.webp"
+      }
+    },
+    "supportedNetworks": {
+      "11155111": {
+        "chainID": "11155111",
+        "family": "EVM",
+        "name": "Sepolia",
+        "provider": "https://sepolia.infura.io/v3/bdabe9d2f9244005af0f566398e648da",
+        "baseAsset": {
+          "symbol": "ETH",
+          "name": "ETH",
+          "decimals": 18,
+          "image": "https://ethereum.org/static/6b935ac0e6194247347855dc3d328e83/6ed5f/eth-diamond-black.webp"
+        }
+      }
+    }
+  },
+  "signing": {},
+  "transactions": {}
+}

@@ -1,0 +1,122 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: #f8f9fa; // Change this to match the sidebar background color
+  color: #333; // This is the text color
+  transition: width 0.5s ease;
+  position: fixed;
+  overflow-x: hidden;
+
+  .top-container {
+    padding: 10px;
+    text-align: center;
+    border-bottom: 1px solid #d3d3d3; // Border color
+
+    .adress-button,
+    .whatnew-button {
+      margin: 10px 0;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 10px;
+      background-color: #ffa500; // Button background color
+      color: white; // Button text color
+      cursor: pointer;
+    }
+
+    
+
+    .welcome-message,
+    .description {
+      margin-bottom: 15px;
+    }
+
+    .welcome-message {
+      font-size: 20px;
+      font-weight: bold;
+    }
+  }
+
+  .main-container {
+    flex-grow: 1;
+    padding: 20px;
+
+    .list-routes {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+
+      a {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 20px;
+        text-decoration: none;
+        color: inherit;
+        color: #333;
+        transition: background-color 0.3s;
+
+        &:hover {
+          color: #ffa500;
+          svg { // Orange color for SVG icon
+            fill: #ffa500;
+            stroke: #ffa500;
+          }
+        }
+
+        &.active {
+          background-color: #ffa500;
+          color: white;
+        }
+      }
+    }
+  }
+
+  .bottom-container {
+    padding: 20px;
+    text-align: center;
+
+    .contact-button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 15px;
+      background-color: #ffa500;
+      color: #f8f9fa;
+      cursor: pointer;
+    }
+  }
+
+  .toggle-button {
+    position: fixed;
+    top: 10px; // Adjust as needed
+    left: 10px; // Adjust as needed
+    z-index: 100; // Ensure the button is clickable
+    cursor: pointer;
+  
+    &.hide {
+      display: none; // Hide the toggle button when the sidebar is open
+    }
+  }
+
+  @media (min-width: 768px) {
+    .container {
+      width: 16% !important;
+    }
+    .toggle-button {
+      display: none; // The toggle button is not needed on larger screens
+    }
+  }
+
+  @media (max-width: 768px) {
+    &.open {
+      width: 70% ; // Sidebar takes up 80% width when open
+    }
+    &.closed {
+      width: 0%; // Sidebar takes up 80% width when open
+    }
+
+  .toggle-button {
+    display: block; // Show the toggle button on smaller screens
+  }
+ }
+}

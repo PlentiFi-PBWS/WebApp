@@ -1,0 +1,98 @@
+.tabs {
+  display: flex;
+  justify-content: center;
+  // box-shadow:  1px 1px 1px #71727d33;
+}
+
+.tab {
+  padding: 10px 20px;
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-size: 16px;
+  border-bottom: 3px solid transparent;
+}
+
+.tab.active {
+  border-bottom: 3px solid #ffa011;
+}
+.tab-content {
+  margin-left: 7%;
+width: 40%;
+  // width: fit-content;
+  border-radius: 02%;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+  margin-right: 2%;
+
+} 
+
+.container-content-history{
+display: flex;
+flex-direction: row;
+justify-content: center;
+// box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+}
+
+.content-IA{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+width: 15%;
+height: 350px;
+border-radius: 02%;
+box-shadow: 0 0 10px #ffa011;
+}
+
+
+
+.input-button-container {
+  display: block;
+  margin-top: 3em; /* Push the input and button to the bottom */
+}
+
+// .chart{
+//   width: 25%;
+//   margin-right: -10%;
+// }
+
+
+.button {
+  background-color: #ffa500; 
+  color: white;
+  padding: 5px 15px; 
+  border: none; 
+  border-radius: 14px; 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+  font-size: 16px; 
+  font-weight: bold; 
+  cursor: pointer; 
+  outline: none; 
+  transition: background-color 0.3s, box-shadow 0.3s; 
+  margin-top: 05%;
+  position: sticky;
+}
+
+.button:hover, .button:focus {
+  background-color: #ffa600a3;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); 
+}
+
+input {
+  background: rgb(252, 241, 214); 
+  border: none;
+  border-radius: 10px;
+  padding: 10px 20px;
+  width: 60%; 
+  &::placeholder {
+    color: rgba(0, 0, 0, 0.5); 
+  }
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px #ffa011;; 
+  }
+}
+
+.sub-IA{
+  margin-top: 20%;
+}
+

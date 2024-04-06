@@ -1,0 +1,68 @@
+.full-page-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; // Full viewport height
+    background-color: #ffa011; // Example orange background color
+  }
+  
+  .content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center; // Center the text for all child elements
+    border: 1px solid #000000; // Example border
+    border-radius: 10px; // Example border radius
+    background-color: #ffffff;
+    box-shadow: 0 0 10px rgba(0, 0, 1, 0.5);
+    width: auto;
+    padding: 3rem; // Example padding
+  }
+  
+  .logo {
+    margin-bottom: 1rem; // Space between the logo and the title
+  }
+  
+  .main-message {
+    font-size: 2rem; // Large font size for the main message
+    margin-bottom: -0.5rem; // Space between the title and the logo row
+    color:#000000;
+  }
+
+  .sub-message {
+    font-size: 1.5rem; // Smaller font size for the sub-message
+    margin-bottom: 1rem; // Space between the sub-message and the logos
+    color:#000000;
+  }
+  
+  .logo-row {
+    display: flex;
+    justify-content: center;
+    gap: 3rem; // Space between logos
+    margin-bottom: 3rem; // Space between the logos and the button
+    margin-top: 2rem; // Space between the logos and the button
+    animation: fadeIn 1s ease-in-out;
+    animation-delay: 1s; /* Start after the sub-message has appeared */
+    animation-fill-mode: backwards;
+
+  }
+  
+  .payment-logo {
+    width: 50px; // Set a fixed width for logos
+    height: auto; // Maintain aspect ratio
+  }
+  
+  .subscribe-button {
+    background-color: #ffa011;
+    color: #000000;
+    border: none;
+    padding: 10px 20px;
+    font-size: 18px; /* Adjust font-size as necessary */
+    cursor: pointer;
+    border-radius: 10px;
+    outline: none;
+    animation: fadeIn 1s ease-in-out;
+    animation-delay: 2s; /* Start after the sub-message has appeared */
+    animation-fill-mode: backwards;
+  }
+  

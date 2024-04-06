@@ -1,0 +1,64 @@
+.containerr {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; // Viewport Height
+    width: 100vw;
+    background-color: #ffa011; // Adjust the color to match the design
+  }
+
+.sign-up-form {
+    display: flex;
+    flex-direction: column;
+    background: #fff; // or any other color that fits the design
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 10px 10px rgba(114, 114, 114, 0.582); // Adjust as needed
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 300px; // Adjust as needed
+    animation: fadeIn 0.5s ease-in-out;
+    animation-fill-mode: backwards;
+    h2 {
+      margin-bottom: 15px;
+      color: #333; // Adjust as needed
+    }
+    input {
+      background: rgb(252, 241, 214); // Adjust the color to match the design
+      border: none;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      padding: 10px 20px;
+      width: 100%; // Adjust as needed
+      &::placeholder {
+        color: rgba(0, 0, 0, 0.5); // Adjust as needed
+      }
+      &:focus {
+        outline: none;
+        box-shadow: 0 0 0 2px #ffa011;; // Adjust the color to match the design
+      }
+    }
+    .sign-up-button {
+      background: #e08b0b; // Adjust the color to match the design
+      color: #fff;
+      border: none;
+      border-radius: 20px;
+      padding: 10px 20px;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: background-color 0.3s;
+      &:hover {
+        background-color: darken(#ffb222, 10%); // Adjust the color to match the design
+      }
+    }
+  }
+  .logo {
+    max-width: 100px; /* Adjust as necessary */
+    margin-bottom: 50px; /* Adjust as necessary */
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }

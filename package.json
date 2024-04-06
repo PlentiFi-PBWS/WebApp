@@ -1,0 +1,90 @@
+{
+  "name": "plenti-wallet",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@chakra-ui/react": "^2.8.2",
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.0",
+    "@mui/icons-material": "^5.15.4",
+    "@mui/material": "^5.15.15",
+    "@mui/styled-engine-sc": "^6.0.0-alpha.18",
+    "@peculiar/asn1-ecc": "^2.3.8",
+    "@peculiar/asn1-schema": "^2.3.8",
+    "@peculiar/asn1-x509": "^2.3.8",
+    "@simplewebauthn/browser": "^9.0.1",
+    "@simplewebauthn/typescript-types": "^8.3.4",
+    "@testing-library/jest-dom": "^5.17.0",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^13.5.0",
+    "@types/debug": "^4.1.12",
+    "@types/jest": "^27.5.2",
+    "@types/node": "^16.18.78",
+    "@types/react": "^18.2.51",
+    "@types/react-dom": "^18.2.18",
+    "@types/uuid": "^9.0.8",
+    "async-mutex": "^0.5.0",
+    "axios": "^1.6.8",
+    "base64url": "^3.0.1",
+    "buffer": "^6.0.3",
+    "cbor": "^9.0.2",
+    "classnames": "^2.5.1",
+    "crypto-browserify": "^3.12.0",
+    "debug": "^4.3.4",
+    "dotenv": "^16.4.5",
+    "elliptic": "^6.5.4",
+    "framer-motion": "^11.0.20",
+    "node-libs-browser": "^2.2.1",
+    "os-browserify": "^0.3.0",
+    "path-browserify": "^1.0.1",
+    "process": "^0.11.10",
+    "react": "^18.2.0",
+    "react-apexcharts": "^1.4.1",
+    "react-chartjs-2": "^5.2.0",
+    "react-dom": "^18.2.0",
+    "react-icons": "^5.0.1",
+    "react-minimal-pie-chart": "^8.4.0",
+    "react-router-dom": "^6.22.0",
+    "react-scripts": "5.0.1",
+    "react-ui-cards": "^3.1.0",
+    "reactjs-popup": "^2.0.6",
+    "sass": "^1.70.0",
+    "stream-browserify": "^3.0.0",
+    "stream-http": "^3.2.0",
+    "styled-components": "^6.1.8",
+    "typescript": "^4.9.5",
+    "userop": "^0.3.8",
+    "uuid": "^9.0.1",
+    "web-vitals": "^2.1.4",
+    "web3": "^4.4.0",
+    "zustand": "^4.5.2"
+  },
+  "scripts": {
+    "start": "react-app-rewired start",
+    "build": "react-app-rewired build",
+    "test": "react-app-rewired test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "customize-cra": "^1.0.0",
+    "react-app-rewired": "^2.2.1"
+  }
+}

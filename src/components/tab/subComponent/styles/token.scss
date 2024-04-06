@@ -1,0 +1,28 @@
+.tokenChart-invest {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    // width: 540px;
+    padding: 20px;
+    // background-color: #ea5555;
+    border-radius: 10px;
+    // box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+
+    .src-Card-styles-module__card--9xEbS {
+        width: 500px;
+        // height: 300px;
+        background-color: #fcfcfcb6;
+        font-style: black
+    }
+    .src-CryptoCard-TitleLine-styles-module__crypto-card-title-line--IIp9B {
+        color: #222222;
+        font-size: 20px;
+        font-weight: bold;
+    }
+    .src-CryptoCard-IconLine-styles-module__crypto-short-name--eVlhe {
+        color: #22222275;
+        font-size: 20px;
+        font-weight: bold;
+    }
+}

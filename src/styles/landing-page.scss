@@ -1,0 +1,82 @@
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  .full-page-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    height: 100vh; /* full height of the viewport */
+    background-color: #ffa011; /* Replace with the color you need */
+    padding: 20px;
+    box-sizing: border-box;
+  }
+  
+  .content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+  }
+  
+  .logo {
+    max-width: 200px; /* Adjust as necessary */
+    margin-bottom: 50px; /* Adjust as necessary */
+    animation: fadeIn 1s ease-in-out;
+    animation-delay: 0.5s; /* Delay the start of the animation */
+    animation-fill-mode: backwards;
+  }
+  
+  .main-message {
+    color: #ffffff;
+    font-size: 48px; /* Adjust font-size as necessary */
+    text-align: center;
+    margin-bottom: 16px;
+    animation: fadeIn 1s ease-in-out;
+    animation-delay: 1s; /* Start after the logo has appeared */
+    animation-fill-mode: backwards;
+  }
+  
+  .sub-message {
+    color: #ffffff;
+    font-size: 24px; /* Adjust font-size as necessary */
+    text-align: center;
+    margin-bottom: 32px;
+    animation: fadeIn 1s ease-in-out;
+    animation-delay: 1.5s; /* Start after the main message has appeared */
+    animation-fill-mode: backwards;
+  }
+  
+  .subscribe-button {
+    background-color: #ffffff;
+    color: #000000;
+    border: none;
+    padding: 10px 20px;
+    font-size: 18px; /* Adjust font-size as necessary */
+    cursor: pointer;
+    border-radius: 5px;
+    outline: none;
+    animation: fadeIn 1s ease-in-out;
+    animation-delay: 2s; /* Start after the sub-message has appeared */
+    animation-fill-mode: backwards;
+  }
+  
+  /* Ensure the content is always centered, even on smaller screens */
+  @media (max-width: 768px) {
+    .content {
+      justify-content: center;
+    }
+  
+    .main-message {
+      font-size: 32px;
+    }
+    
+    .sub-message {
+      font-size: 18px;
+    }
+  }
+  

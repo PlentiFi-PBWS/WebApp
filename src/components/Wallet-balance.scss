@@ -1,0 +1,111 @@
+.crypto-balance {
+    // display: flex;
+    // justify-content: space-between;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100px;
+    width: 550px;
+    background-color: #fff;
+    padding: 10px;
+    border-radius: 4px;
+    margin-top: 01%;
+    margin-left: 30%;
+    font-family: 'Arial', sans-serif; /* Assuming Arial font */
+  }
+  
+  .crypto-info {
+    display: flex;
+    align-items: center;
+  }
+  
+  .crypto-icon {
+    width: 80px; /* Adjust size as necessary */
+    height: 80px; /* Adjust size as necessary */
+    margin-right: 10px;
+    border-radius: 10px; /* Adjust border-radius as necessary */
+  }
+  
+  .address {
+    display: flex;
+    font-size: 1.1em;
+    font-weight:600;
+    color: #333333;
+    white-space: nowrap;
+    margin: -15px 0 15px 0;
+
+    .icon {
+      font-size: 20px;
+      margin: 0 0 0 5px;
+      cursor: pointer;
+    }
+  }
+
+  .address-dropdown {
+    display: block;
+    align-self: flex-start;
+    border: 1px solid #ffffff;
+    border-radius: 4px;
+    font-size: 0.8em;
+    font-weight: 600;
+    color: #333;
+    margin: -15px 0 15px -5px;
+    cursor: pointer;
+    outline: none;
+  }
+
+  /* Style for the dropdown options */
+.address-dropdown option {
+  font-weight: 600;
+  background: orange;
+  color: black;
+}
+
+.address-container {
+  display: flex;
+  align-items: center; /* Align the icon with the address text */
+}
+.copy-iconn {
+  margin: -15px 0 15px 0; /* Add some space between the address and the icon */
+  cursor: pointer; /* Change cursor to indicate the icon is clickable */
+}
+  
+  .balance-info {
+    flex-grow: 1; /* Ensures that balance info takes up the rest of the space */
+    text-align: left;
+  }
+  
+  .balance {
+    font-size: 1.3em;
+    font-weight: bold;
+    color: rgb(0, 0, 0);
+  }
+  
+  .change {
+    font-size: 0.8em;
+  }
+  
+  .change.positive {
+    color: green;
+  }
+  
+  .change.negative {
+    color: red;
+  }
+  
+  .actions {
+    display: flex;
+    flex-direction: row;
+    align-items: center; /* Align items vertically */
+    justify-content: center;  /* Space out the buttons */
+  }
+  
+  .action-button {
+    background: none;
+    border: 1px solid #ccc; /* Assuming you want borders */
+    border-radius: 20px; /* Adjust border-radius as necessary */
+    padding: 7px; /* Add some padding for better clickability */
+    margin: 5px; /* Space out the buttons */
+    cursor: pointer;
+    font-size: 20px;
+  }
