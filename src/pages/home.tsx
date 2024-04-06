@@ -42,7 +42,7 @@ function Home() {
 
   useEffect(() => {
     setUserAddress(userAddress ?? '');
-    
+
   }, []);
 
   // const addresses = localStorage.getItem(SMART_ACCOUNT_KEY)? [localStorage.getItem(SMART_ACCOUNT_KEY)!].concat(localStorage.getItem(XRPL_SMART_ACCOUNT_KEY) ? [localStorage.getItem(XRPL_SMART_ACCOUNT_KEY)]: []): [];
@@ -51,17 +51,19 @@ function Home() {
       .concat(localStorage.getItem(XRPL_SMART_ACCOUNT_KEY) ? [localStorage.getItem(XRPL_SMART_ACCOUNT_KEY)!] : [])
       .filter((address) => address !== null) // Filter out null values
     : [];
+
+  const data = 'tx hash: 0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef';
   return (
     <div className="App">
-      <Sidebar address={addresses.length>0 ? addresses[0] + "|" + addresses[1]: "no address registered"} name='PlentiFi'/>
-      <Navbar address={addresses.length>0 ? addresses[0]: "no address registered"} name='testt'/>
-      <CryptoBalance addresses={[addresses.length>0 ? addresses[0] + "|" + addresses[1]: "no address registered"]} />
-      <TabNavigation/>
+      <Sidebar address={addresses.length > 0 ? addresses[0] + "|" + addresses[1] : "no address registered"} name='PlentiFi' />
+      <Navbar address={addresses.length > 0 ? addresses[0] : "no address registered"} name='testt' />
+      <CryptoBalance addresses={[addresses.length > 0 ? addresses[0] + "|" + addresses[1] : "no address registered"]} />
+      <TabNavigation />
       <div className='assets'>
         <AssetDisplay />
       </div>
       <ControlledPopup title='This is a popup' content={'frbjfrbffr'} />
-      <TransitionsSnackbar />
+      <TransitionsSnackbar data={data} />
       <button onClick={testTx}>yo</button>
     </div>
   );

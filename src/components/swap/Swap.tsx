@@ -8,6 +8,10 @@ import { formatNumber } from '../../utils/tokenAmountToString';
 import { ethers } from 'ethers';
 import { swapXrpl } from '../../background/xrplSdk';
 
+import Snackbar from '@mui/material/Snackbar';
+import Fade from '@mui/material/Fade';
+import { TransitionProps } from '@mui/material/transitions';
+
 const getPrice = (ticker: string) => {
   return AVAILABLE_TOKENS.find(token => token.ticker === ticker)?.price || '1';
 }
@@ -19,7 +23,18 @@ const SwapComponent = ({ onSwap }: { onSwap: Function }) => {
   const [fromCurrency, setFromCurrency] = useState(asset?.toUpperCase() === 'USD' ? 'WBTC' : 'USD');
   const [toAmount, setToAmount] = useState('0');
   const [toCurrency, setToCurrency] = useState(asset ? asset : 'USD');
-  const [chain, setChain] = useState<'evm' | 'xrpl'>('evm');
+  const [snackbar, setSnackbar] = useState<{
+    open: boolean;
+    Transition: React.ComponentType<
+      TransitionProps & {
+        children: React.ReactElement<any, any>;
+      }
+    >;
+  }>({
+    open: false,
+    Transition: Fade,
+  });
+  const [snackMsg, setSnackMsg] = useState('');
 
   const handleFromAmountChange = (e: any) => {
     if (Number(e.target.value) < 0) {
@@ -70,6 +85,7 @@ const SwapComponent = ({ onSwap }: { onSwap: Function }) => {
   };
 
   const handleSwap = async () => {
+    let snackHash: string | string[] = "";
     const smartAccount = localStorage.getItem(SMART_ACCOUNT_KEY) || '';
     if (smartAccount) {
       console.log("useState: from: ", fromCurrency.toUpperCase(), " to: ", toCurrency.toUpperCase());
@@ -108,7 +124,7 @@ const SwapComponent = ({ onSwap }: { onSwap: Function }) => {
             const login = localStorage.getItem(LOGIN_KEY) || '';
             if (!login) {
               console.log("cannot swap: no login in local storage");
-              return "no login in local storage";
+              snackHash = "no login in local storage";
             }
             const password = 'passwordd'; // todo
             if (from === 'XRP') {
@@ -128,7 +144,7 @@ const SwapComponent = ({ onSwap }: { onSwap: Function }) => {
               return result;
             } else if (to === 'XRP') {
               console.log(2);
-              return await swapXrpl(
+              snackHash = await swapXrpl(
                 login,
                 password,
                 {
@@ -145,14 +161,35 @@ const SwapComponent = ({ onSwap }: { onSwap: Function }) => {
             const txhash = await swap(login, from, to, ethers.utils.parseEther(fromAmountSecure).toBigInt(), ethers.utils.parseEther(toAmountSecure).toBigInt(), smartAccount, AMM_CONTRACT);
             console.log('swap txhash: ', txhash);
             console.log("swap values: \tinput: ", ethers.utils.parseEther(fromAmountSecure).toBigInt(), "\toutput: ", ethers.utils.parseEther(toAmountSecure).toBigInt());
-            return txhash;
+            // SlideTransition('success', 'Swap successful', 'Transaction hash: ' + txhash);
+            snackHash = txhash;
           }
+
+          if (snackHash && typeof snackHash === 'string') {
+            setSnackMsg(snackHash);
+            setSnackbar({ ...snackbar, open: true });
+            console.log("snackHash1: ", snackHash);
+          } else if (snackHash && Array.isArray(snackHash)){
+            // join the array of strings with a comma + space
+            setSnackMsg((snackHash as string[]).join(', '));
+            setSnackbar({ ...snackbar, open: true });
+            console.log("snackHash: 2", snackHash);
+          }
+      
+          console.log("snackHash: 3", snackHash);
         }
-        console.log("cannot swap: no login in local storage");
-        return "no login in local storage";
+        // console.log("cannot swap: no login in local storage");
+        // return "no login in local storage";
       }
     }
     // }
+  };
+
+  const handleClose = () => { 
+    setSnackbar({
+      ...snackbar,
+      open: false,
+    });
   };
 
   return (
@@ -213,6 +250,25 @@ const SwapComponent = ({ onSwap }: { onSwap: Function }) => {
           </div>
         </div>
         <button className="swap-button" onClick={handleSwap}>Swap</button>
+        <Snackbar
+          open={snackbar.open}
+          onClose={handleClose}
+          TransitionComponent={snackbar.Transition}
+          message={snackMsg}
+          key={snackbar.Transition.name}
+          autoHideDuration={4000}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+          ContentProps={{
+            sx: {
+              backgroundColor: 'white',
+              color: 'black',
+              border: '1px solid orange',
+              height: '60px',
+              boxShadow: '0 0 20px #ffa011',
+              borderRadius: '10px',
+            }
+          }}
+        />
       </div>
     </div>
   );

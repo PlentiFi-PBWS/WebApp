@@ -3,14 +3,17 @@ import Button from '@mui/material/Button';
 import Snackbar from '@mui/material/Snackbar';
 import Fade from '@mui/material/Fade';
 import Slide, { SlideProps } from '@mui/material/Slide';
-import Grow, { GrowProps } from '@mui/material/Grow';
 import { TransitionProps } from '@mui/material/transitions';
+
+interface TransitionsSnackbarProps {
+  data: string; // Prop to pass the data/message to be displayed
+}
 
 function SlideTransition(props: SlideProps) {
   return <Slide {...props} direction="left" />;
 }
 
-export default function TransitionsSnackbar() {
+export default function TransitionsSnackbar({ data }: TransitionsSnackbarProps) {
   const [state, setState] = React.useState<{
     open: boolean;
     Transition: React.ComponentType<
@@ -52,7 +55,7 @@ export default function TransitionsSnackbar() {
         open={state.open}
         onClose={handleClose}
         TransitionComponent={state.Transition}
-        message="This is a test message!"
+        message={data}
         key={state.Transition.name}
         autoHideDuration={4000}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
