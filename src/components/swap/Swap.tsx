@@ -75,17 +75,12 @@ const SwapComponent = ({ onSwap }: { onSwap: Function }) => {
   };
 
   return (
-    <div>
+    <div className='swap-component'>
       <h4>Swap</h4>
       <div className="swap-container" >
         {/* <p>You sell:</p> */}
+        <div className="swap-content">
         <div className="input-group">
-          <input
-            type="number"
-            className="input-field"
-            value={fromAmount}
-            onChange={handleFromAmountChange}
-          />
           <select
             className="currency-select"
             value={fromCurrency}
@@ -98,18 +93,19 @@ const SwapComponent = ({ onSwap }: { onSwap: Function }) => {
               ))
             }
           </select>
+          <p className='swap-label'>You Send</p>
+          <input
+            type="number"
+            className="input-field"
+            value={fromAmount}
+            onChange={handleFromAmountChange}
+          />
         </div>
         <div className="swap-icon" onClick={handleSwap}>
           ⇅
         </div>
         {/* <p>You buy:</p> */}
         <div className="input-group">
-          <input
-            type="number"
-            className="input-field"
-            value={toAmount}
-            onChange={handleToAmountChange}
-          />
           <select
             className="currency-select"
             value={toCurrency}
@@ -122,6 +118,14 @@ const SwapComponent = ({ onSwap }: { onSwap: Function }) => {
               ))
             }
           </select>
+          <p className='swap-label'>You receive</p>
+          <input
+            type="number"
+            className="input-field"
+            value={toAmount}
+            onChange={handleToAmountChange}
+          />
+        </div>
         </div>
         <button className="swap-button" onClick={handleSwap}>Swap</button>
       </div>
