@@ -85,7 +85,7 @@ const CryptoBalance = (props: Props) => {
   };
 
   // Check if addresses is an array and has more than one address
-  const isMultiple = Array.isArray(props.addresses) && props.addresses.length > 1;
+  const isMultiple = false; // Array.isArray(props.addresses) && props.addresses.length > 1;
 
   return (
     <div className="crypto-balance">
