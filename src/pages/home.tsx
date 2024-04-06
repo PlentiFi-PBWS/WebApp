@@ -43,8 +43,10 @@ function Home() {
       <Navbar address={addresses.length>0 ? addresses[0]: "no address registered"} name='testt'/>
       <CryptoBalance addresses={addresses} />
       <TabNavigation/>
+      <div className='assets'>
       <AssetDisplay/>
-      <ControlledPopup title='ee' content={'frbjfrbffr'}/>
+      </div>
+      <ControlledPopup title='This is a popup' content={'frbjfrbffr'}/>
       <TransitionsSnackbar/>
    </div>
   );
