@@ -8,7 +8,7 @@ import {
   StateManager,
 } from '../background/state';
 import { State } from '../background/state/stateTypes';
-import { SMART_ACCOUNT_KEY } from '../constants';
+import { SMART_ACCOUNT_KEY, XRPL_SMART_ACCOUNT_KEY } from '../constants';
 import Popup from 'reactjs-popup';
 import ControlledPopup from '../components/popup/Popup';
 import TransitionsSnackbar from '../components/snackbar/Snackbar';
@@ -30,10 +30,10 @@ function Home() {
     setUserAddress(userAddress?? '');
   }, []);
   
-  const addresses = localStorage.getItem(SMART_ACCOUNT_KEY)? [localStorage.getItem(SMART_ACCOUNT_KEY)!]: [];
+  const addresses = localStorage.getItem(SMART_ACCOUNT_KEY)? [localStorage.getItem(SMART_ACCOUNT_KEY)!, localStorage.getItem(XRPL_SMART_ACCOUNT_KEY)!]: [];
   return (
     <div className="App">
-      <Sidebar address={addresses.length>0 ? addresses[0]: "no address registered"} name='PlentiFi'/>
+      <Sidebar address={addresses.length>1 ? addresses[0] + "|" + addresses[1]: "no address registered"} name='PlentiFi'/>
       <Navbar address={addresses.length>0 ? addresses[0]: "no address registered"} name='testt'/>
       <CryptoBalance addresses={addresses} />
       <TabNavigation/>

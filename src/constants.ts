@@ -10,9 +10,11 @@ export const LOGIN_SERVICE_PORT = 4340
 
 export const ENTROPY = 1234567890;
 export const BUNDLER_BASE_URL = 'http://localhost:3001';
+export const XRPL_BASE_LOGIN_SERVICE_URL = 'http://localhost:3002';
 
 /* -----------------------------STORAGE KEYS----------------------------- */
 export const SMART_ACCOUNT_KEY = "smart_account_key";
+export const XRPL_SMART_ACCOUNT_KEY = "xrpl_smart_account_key";
 export const LOGIN_KEY = "login_key";
 
 /* -----------------------------AVAILABLE TOKENS----------------------------- */

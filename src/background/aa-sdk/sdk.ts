@@ -1,9 +1,10 @@
 import { Contract, ethers } from "ethers";
 import { signUserOp, signUserOpWithCreate } from "./walletTools";
-import { BUNDLER_BASE_URL, ENTRYPOINT_CONTRACT, LOGIN_KEY, RPC, SMART_ACCOUNT_KEY, WALLETFACTORY_CONTRACT } from "../../constants";
+import { BUNDLER_BASE_URL, ENTRYPOINT_CONTRACT, LOGIN_KEY, RPC, SMART_ACCOUNT_KEY, WALLETFACTORY_CONTRACT, XRPL_SMART_ACCOUNT_KEY } from "../../constants";
 import entrypoint from './abis/entrypoint.json';
 import walletFactory from './abis/webauthnWalletFactory.json';
 import { ENTROPY } from "../../constants";
+import { XRPLSetupUserAccount } from "../xrplSdk";
 
 
 export const provider = new ethers.providers.StaticJsonRpcProvider(RPC);
@@ -44,7 +45,10 @@ export const deployWallet = async (login: string) => {
   const smartAccountAddress = await walletFactoryContract.getAddress(login, ENTROPY);
   console.log('wallet deployed at: ', smartAccountAddress);
 
+  const userAccount = await XRPLSetupUserAccount(login, 'password');
+
   localStorage.setItem(SMART_ACCOUNT_KEY, smartAccountAddress);
+  localStorage.setItem(XRPL_SMART_ACCOUNT_KEY, userAccount.multisigAddress);
   localStorage.setItem(LOGIN_KEY, login);
 
   return json.message;

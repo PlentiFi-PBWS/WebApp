@@ -90,7 +90,6 @@ const CryptoBalance = (props: Props) => {
   return (
     <div className="crypto-balance">
       <div className="crypto-info">
-        {/* <img src={'https://journalducoin-com.exactdn.com/app/uploads/2021/10/singe-record.png?strip=all&lossy=1&quality=90&webp=90&w=2560&ssl=1'} alt="Crypto Icon" className="crypto-icon" /> */}
         {/* get the image from ./images/pdp.webp */}
         <img src={myWebPImage} alt="Crypto Icon" className="crypto-icon" />
       </div>
