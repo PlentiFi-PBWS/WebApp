@@ -30,10 +30,15 @@ function Home() {
     setUserAddress(userAddress?? '');
   }, []);
   
-  const addresses = localStorage.getItem(SMART_ACCOUNT_KEY)? [localStorage.getItem(SMART_ACCOUNT_KEY)!, localStorage.getItem(XRPL_SMART_ACCOUNT_KEY)!]: [];
+  // const addresses = localStorage.getItem(SMART_ACCOUNT_KEY)? [localStorage.getItem(SMART_ACCOUNT_KEY)!].concat(localStorage.getItem(XRPL_SMART_ACCOUNT_KEY) ? [localStorage.getItem(XRPL_SMART_ACCOUNT_KEY)]: []): [];
+  const addresses = localStorage.getItem(SMART_ACCOUNT_KEY)
+    ? [localStorage.getItem(SMART_ACCOUNT_KEY)!]
+        .concat(localStorage.getItem(XRPL_SMART_ACCOUNT_KEY) ? [localStorage.getItem(XRPL_SMART_ACCOUNT_KEY)!] : [])
+        .filter((address) => address !== null) // Filter out null values
+    : [];
   return (
     <div className="App">
-      <Sidebar address={addresses.length>1 ? addresses[0] + "|" + addresses[1]: "no address registered"} name='PlentiFi'/>
+      <Sidebar address={addresses.length>0 ? addresses[0] + "|" + addresses[1]: "no address registered"} name='PlentiFi'/>
       <Navbar address={addresses.length>0 ? addresses[0]: "no address registered"} name='testt'/>
       <CryptoBalance addresses={addresses} />
       <TabNavigation/>

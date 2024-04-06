@@ -16,10 +16,7 @@ type Props = {
 };
 const Sidebar = (props: Props) => {
     const displayAddresses = props.address?.split("|");
-    const trunckatedAddresses = displayAddresses?.map((address) => {
-      `${address?.slice(0, 7) ?? ""}...${address?.slice(-4) ?? ""}`;
-    });
-
+    const trunckatedAddresses = displayAddresses?.map((displayAddress) => `${displayAddress?.slice(0, 7) ?? ""}...${displayAddress?.slice(-4) ?? ""}`);
     const displayName = `${props.name?.slice(0, 10) ?? ""}`;
 
     const [isOpen, setIsOpen] = useState(false);
@@ -32,10 +29,10 @@ const Sidebar = (props: Props) => {
       </div>
       <div className="top-container">
         <button className="adress-button">
-          { // should display the xrpl and evm addresses in the sidebar
-            trunckatedAddresses?.map((address) => {
-              <div>{address}</div>
-            })
+          {
+            trunckatedAddresses?.map((trunckatedAddress) => (
+              <div key={trunckatedAddress}>{trunckatedAddress}</div>
+            ))
           }
         </button>
         <div className="welcome-message">Welcome to {displayName}</div>
