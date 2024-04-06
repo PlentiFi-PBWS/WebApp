@@ -45,7 +45,7 @@ export const AVAILABLE_TOKENS = [
   {
     id: 2,
     name: "USD",
-    ticker: "USDT",
+    ticker: "USD",
     address: (LOCAL ? '0xDdE9C0b43cD8837C61C1968697CE3948804ba71c' : '0xfA41c676566422887f29FD095Fb8E8FdB2396548'),
     decimals: 18,
     price: "1",

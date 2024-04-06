@@ -25,7 +25,7 @@ export const deploySmartWallet = async (login: string, fund = true) => {
 
   // for demo purposes: fund the account with some USDT
   if (fund) {
-    const usdtAddress = AVAILABLE_TOKENS.find(token => token.ticker === 'USDT')?.address;
+    const usdtAddress = AVAILABLE_TOKENS.find(token => token.ticker === 'USD')?.address;
     if (usdtAddress !== undefined) {
       const usdt = new ethers.Contract(
         usdtAddress!,
@@ -37,7 +37,7 @@ export const deploySmartWallet = async (login: string, fund = true) => {
       if (account !== '') {
         const fundTxResult = await sendTransaction(login, account, usdt.interface.encodeFunctionData('mint', [account, "2000000000000000000000"]), usdtAddress!, BigInt(0));
         console.log("Funded account: ", account, " with 2000 USDT\nTx hash: ", fundTxResult);
-        console.log("usdt contract address: ", usdtAddress);
+        console.log("usd contract address: ", usdtAddress);
       }
     }
   }
