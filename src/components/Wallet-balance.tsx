@@ -7,6 +7,7 @@ import myWebPImage from "../images/pdp.png";
 import { get } from 'http';
 import { ethers } from 'ethers';
 import { provider } from '../background/aa-sdk/providers';
+import { getEthBalance } from '../background/aa-sdk';
 
 
 type Props = {
@@ -84,13 +85,16 @@ const CryptoBalance = (props: Props) => {
     setSelectedAddress((event.target.value));
   };
 
+  const XrpTotal = () => {
+   getEthBalance(props.addresses[0])
+  }
+
   // Check if addresses is an array and has more than one address
   const isMultiple = false; // Array.isArray(props.addresses) && props.addresses.length > 1;
 
   return (
     <div className="crypto-balance">
       <div className="crypto-info">
-        {/* get the image from ./images/pdp.webp */}
         <img src={myWebPImage} alt="Crypto Icon" className="crypto-icon" />
       </div>
       <div className="balance-info">
@@ -109,6 +113,7 @@ const CryptoBalance = (props: Props) => {
           <div className="address">{localStorage.getItem(LOGIN_KEY) ?? 'No Account set'} <IoMdCopy className="icon" onClick={() => onCopyToClipboard(props.addresses[0])} /></div>
         )}
         <div className="balance">{sum}</div>
+        <div>34.8 XRP</div>
         <div className={`change ${1 >= 0 ? 'positive' : 'negative'}`}>
         </div>
       </div>

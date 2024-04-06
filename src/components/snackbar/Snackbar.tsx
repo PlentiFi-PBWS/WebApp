@@ -61,6 +61,7 @@ export default function TransitionsSnackbar() {
               backgroundColor: 'white', 
               color: 'black',
               border: '1px solid orange',
+              height: '60px',
               boxShadow: '0 0 20px #ffa011',
               borderRadius: '10px',
             }

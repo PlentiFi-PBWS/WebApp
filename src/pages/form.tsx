@@ -13,7 +13,8 @@ function SignUpForm() {
     name: 'John Doe',
     email: 'sudo.user@plentifi.app',
     country: 'France',
-    age: '22'
+    age: '22',
+    password: ''
   });
 
 
@@ -89,6 +90,13 @@ function SignUpForm() {
           name="age"
           placeholder="Age"
           value={formData.age}
+          onChange={handleChange}
+        />
+        <input
+          type="text"
+          name="password"
+          placeholder="password"
+          value={formData.password}
           onChange={handleChange}
         />
         {/* spin if isDeploying === true */}

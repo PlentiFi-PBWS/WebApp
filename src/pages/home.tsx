@@ -41,7 +41,7 @@ function Home() {
     <div className="App">
       <Sidebar address={addresses.length>0 ? addresses[0] + "|" + addresses[1]: "no address registered"} name='PlentiFi'/>
       <Navbar address={addresses.length>0 ? addresses[0]: "no address registered"} name='testt'/>
-      <CryptoBalance addresses={addresses} />
+      <CryptoBalance addresses={[addresses.length>0 ? addresses[0] + "|" + addresses[1]: "no address registered"]} />
       <TabNavigation/>
       <div className='assets'>
       <AssetDisplay/>
