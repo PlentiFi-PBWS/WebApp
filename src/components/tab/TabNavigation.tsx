@@ -135,7 +135,6 @@ const TabNavigation: React.FC = () => {
        </div> */}
        </div>
 
-      <AssetDisplay/>
       
     </div>
   );

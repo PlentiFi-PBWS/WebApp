@@ -12,6 +12,7 @@ import { SMART_ACCOUNT_KEY, XRPL_SMART_ACCOUNT_KEY } from '../constants';
 import Popup from 'reactjs-popup';
 import ControlledPopup from '../components/popup/Popup';
 import TransitionsSnackbar from '../components/snackbar/Snackbar';
+import AssetDisplay from '../components/listAsset/AssetDisplay';
 
 
 function Home() {
@@ -42,6 +43,7 @@ function Home() {
       <Navbar address={addresses.length>0 ? addresses[0]: "no address registered"} name='testt'/>
       <CryptoBalance addresses={addresses} />
       <TabNavigation/>
+      <AssetDisplay/>
       <ControlledPopup title='ee' content={'frbjfrbffr'}/>
       <TransitionsSnackbar/>
    </div>
