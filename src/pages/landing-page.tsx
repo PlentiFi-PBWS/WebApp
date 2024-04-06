@@ -1,10 +1,17 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import '../styles/landing-page.scss'; // make sure to create a corresponding CSS file
 import { useNavigate } from 'react-router-dom';
 import logo from '../assets/icons/plentifi.png';
 import Popup from 'reactjs-popup';
 
 function Lp() {
+
+  useEffect(() => {
+    // clear local storage
+    localStorage.clear();
+    console.log('cleared local storage');
+  }
+  , []);
 
   let navigate = useNavigate();
   const routeChange = () => {
