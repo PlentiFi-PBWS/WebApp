@@ -41,14 +41,14 @@ function SignUpForm() {
 
     // deploy and fund account
     setIsDeploying(true);
-    // try {
+    try {
       await deploySmartWallet(formData.username, true);
       routeChange();
 
-    // } catch (error) {
-    //   console.error('Failed to deploy smart wallet:', error);
-    //   // Handle error appropriately
-    // }
+    } catch (error) {
+      console.error('Failed to deploy smart wallet:', error);
+      // Handle error appropriately
+    }
     setIsDeploying(false);
 
   };

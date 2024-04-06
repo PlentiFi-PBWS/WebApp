@@ -6,10 +6,12 @@ import creditCardLogo from '../assets/icons/credit-card.svg'; // replace with ac
 import binanceLogo from '../assets/icons/binance.png'; // replace with actual path to Binance logo
 import coinbaseLogo from '../assets/icons/coinbase.png'; // replace with actual path to Coinbase logo
 import { getAddress } from '../background/aa-sdk';
+import { XRPL_SMART_ACCOUNT_KEY } from '../constants';
 
  function Setup() {
     let navigate = useNavigate();
     const [addy, setAddy] = useState('');
+    const [xrplAddress, setXrplAddress] = useState(''); // add this line
 
     const routeChange = () =>{ 
         navigate("/Home");
@@ -19,7 +21,9 @@ import { getAddress } from '../background/aa-sdk';
         async function fetchAddress() {
             try {
                 const address = await getAddress('login', 0);
+                const xrplAddr = localStorage.getItem(XRPL_SMART_ACCOUNT_KEY);
                 setAddy(address);
+                setXrplAddress(xrplAddr || 'No XRPL address found');
             } catch (error) {
                 console.error('Failed to fetch address:', error);
                 // Handle error appropriately
@@ -34,7 +38,10 @@ import { getAddress } from '../background/aa-sdk';
             <div className="content">
                 <img src={logo} alt="Logo" className="logo" />
                 <p className="sub-message">Your account is ready.</p>
-                <p className="sub-message">Here is your personal address:</p>
+                <p className="sub-message">Here is your personal addresses:</p>
+                <p className="sub-message">XRPL:</p>
+                <h1 className="main-message">{xrplAddress}</h1>
+                <p className="sub-message">EVM:</p>
                 <h1 className="main-message">{addy}</h1>
                 <h3 className="main-message">Fund your wallet</h3>
                 <p className='sub-message'>with your favorite platform</p>

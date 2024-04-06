@@ -16,6 +16,8 @@ export const XRPL_BASE_LOGIN_SERVICE_URL = 'http://localhost:3002';
 export const SMART_ACCOUNT_KEY = "smart_account_key";
 export const XRPL_SMART_ACCOUNT_KEY = "xrpl_smart_account_key";
 export const LOGIN_KEY = "login_key";
+export const XRPL_TOKEN = "xrpl_token";
+export const MASTER_SEED_KEY = "master_seed_key";
 
 /* -----------------------------AVAILABLE TOKENS----------------------------- */
 export const AMM_CONTRACT = LOCAL ? "0x27e3Ce53ddE18E62f8A312648FAC60B6bE48731A" : "0xF0d7935a33b6126115D21Ec49403e4ce378A42Dd";
