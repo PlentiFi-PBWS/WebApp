@@ -1,13 +1,17 @@
+import { ethers } from "ethers";
 import { ENTROPY, RPC } from "../../constants";
+import { walletFactoryContract } from "./contracts";
 
-export const getXrpBalance = async (address: string) => {
-  // todo
-  return 'balance'; // todo
+export const getEthBalance = async (address: string) => {
+  const provider = new ethers.providers.StaticJsonRpcProvider(RPC);
+  return await provider.getBalance(address);
 }
 
 export const getAddress = async (login: string, entropy?: number) => {
-  throw Error('Not implemented');
-  // todo
+  return await walletFactoryContract.getAddress(
+    login,
+    entropy !== undefined ? entropy : ENTROPY
+  );
 }
 
 export { sendTransaction as sendUserOp } from "./sdk";

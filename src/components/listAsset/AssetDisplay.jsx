@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import DynamicTable from './DynamicTable';
 import './AssetDisplay.scss';
 import { AVAILABLE_TOKENS, SMART_ACCOUNT_KEY } from '../../constants';
+import { provider } from '../../background/aa-sdk/sdk';
+import { ethers } from 'ethers';
 
 
 const AssetDisplay = () => {
@@ -16,13 +18,15 @@ const AssetDisplay = () => {
         return;
       }
       const assetsData = await Promise.all(AVAILABLE_TOKENS.map(async (tokenData) => {
-        const balance = "0"; // todo: get token balance
+        const token = new ethers.Contract(tokenData.address, ["function balanceOf(address account) public view returns (uint256)"], provider);
+        const balance = await token.balanceOf(assetOwner);
+        const amount = ethers.utils.formatUnits(balance, tokenData.decimals);
         // console.log("Amount: ", amount);
         return {
           name: tokenData.name,
           ticker: tokenData.ticker,
           price: tokenData.price,
-          amount: balance,
+          amount: amount,
           decimals: tokenData.decimals
         };
       }));

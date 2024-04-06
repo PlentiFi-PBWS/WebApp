@@ -3,6 +3,8 @@ import React, { useEffect, useState } from 'react';
 // import FavDynamicTable from './FavDynamicTable'; 
 import './AssetDisplay.scss';
 import { AVAILABLE_TOKENS, SMART_ACCOUNT_KEY } from '../../constants';
+import { ethers } from 'ethers';
+import { provider } from '../../background/aa-sdk/providers';
 import DynamicTable from '../listAsset/DynamicTable';
 
 const FavAssetDisplay = () => {
@@ -17,13 +19,15 @@ const FavAssetDisplay = () => {
         return;
       }
       const assetsData = await Promise.all(AVAILABLE_TOKENS.map(async (tokenData) => {
-        const balance = "0"; // todo: get token balance
+        const token = new ethers.Contract(tokenData.address, ["function balanceOf(address account) public view returns (uint256)"], provider);
+        const balance = await token.balanceOf(assetOwner);
+        const amount = ethers.utils.formatUnits(balance, tokenData.decimals);
         // console.log("Amount: ", amount);
         return {
           name: tokenData.name,
           ticker: tokenData.ticker,
           price: tokenData.price,
-          amount: balance,
+          amount: amount,
           decimals: tokenData.decimals
         };
       }));

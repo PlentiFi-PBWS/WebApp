@@ -5,6 +5,8 @@ import { AVAILABLE_TOKENS, LOGIN_KEY, SMART_ACCOUNT_KEY } from '../constants';
 // Importing the WebP image
 import myWebPImage from "../images/pdp.png";
 import { get } from 'http';
+import { ethers } from 'ethers';
+import { provider } from '../background/aa-sdk/providers';
 
 
 type Props = {
@@ -45,11 +47,13 @@ const CryptoBalance = (props: Props) => {
         return;
       }
       const assetsData = await Promise.all(AVAILABLE_TOKENS.map(async (tokenData) => {
-        const balance = "0"; // todo: get token balance
+        const token = new ethers.Contract(tokenData.address, ["function balanceOf(address account) public view returns (uint256)"], provider);
+        const balance = await token.balanceOf(assetOwner);
+        const amount = ethers.utils.formatUnits(balance, tokenData.decimals);
         // console.log("Amount: ", amount);
         return {
           price: tokenData.price,
-          amount: balance,
+          amount: amount,
         };
       }));
       const total = assetsData.map((assetData) => {
@@ -86,6 +90,8 @@ const CryptoBalance = (props: Props) => {
   return (
     <div className="crypto-balance">
       <div className="crypto-info">
+        {/* <img src={'https://journalducoin-com.exactdn.com/app/uploads/2021/10/singe-record.png?strip=all&lossy=1&quality=90&webp=90&w=2560&ssl=1'} alt="Crypto Icon" className="crypto-icon" /> */}
+        {/* get the image from ./images/pdp.webp */}
         <img src={myWebPImage} alt="Crypto Icon" className="crypto-icon" />
       </div>
       <div className="balance-info">
