@@ -96,3 +96,11 @@
     align-items: center;
     width: 700px;
 }
+
+.asset-cards-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px; // Spacing between cards
+    justify-content: center; // Center the cards if there is extra space
+    // Add more styling as needed
+  }

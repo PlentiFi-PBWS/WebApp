@@ -1,0 +1,25 @@
+.asset-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 220px;
+    padding: 5px;
+    margin: 10px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 0 10px #ffa011;
+    cursor: pointer;
+    // Add padding, margins, borders, etc., as needed
+    img {
+      width: 50px; // Adjust size as needed
+      height: auto;
+    }
+    h3 {
+      margin-bottom: -5px;
+    }
+    p {
+      font-size: 14px;
+    }
+  }
+  
