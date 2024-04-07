@@ -48,7 +48,7 @@ const ControlledPopup = (props: Props) => {
   return (
     <div>
       <button type="button" className="button" onClick={() => setOpen(o => !o)}>
-        Controlled Popup
+       Popup
       </button>
       <Popup open={open} closeOnDocumentClick onClose={closeModal}>
         <div className="modal">
@@ -56,7 +56,7 @@ const ControlledPopup = (props: Props) => {
           <div className="content">
             {props.content}
             <input 
-              type="password" 
+              type="password"
               className="password-input" 
               placeholder="Enter password"
               value={password} 

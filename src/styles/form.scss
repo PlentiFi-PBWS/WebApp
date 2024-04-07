@@ -40,6 +40,9 @@
       }
     }
     .sign-up-button {
+      display: flex;
+      align-items: center;
+      flex-direction: column;
       background: #e08b0b; // Adjust the color to match the design
       color: #fff;
       border: none;

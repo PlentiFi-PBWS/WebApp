@@ -19,6 +19,7 @@ const getPrice = (ticker: string) => {
 const SwapComponent = ({ onSwap }: { onSwap: Function }) => {
   const { asset } = useParams();
   // console.log('asset: ', asset);
+  const [isDeploying, setIsDeploying] = useState(false);
   const [fromAmount, setFromAmount] = useState('0');
   const [fromCurrency, setFromCurrency] = useState(asset?.toUpperCase() === 'USD' ? 'WBTC' : 'USD');
   const [toAmount, setToAmount] = useState('0');
@@ -87,6 +88,7 @@ const SwapComponent = ({ onSwap }: { onSwap: Function }) => {
   const handleSwap = async () => {
     let snackHash: string | string[] = "";
     const smartAccount = localStorage.getItem(SMART_ACCOUNT_KEY) || '';
+    setIsDeploying(true);
     if (smartAccount) {
       console.log("useState: from: ", fromCurrency.toUpperCase(), " to: ", toCurrency.toUpperCase());
       // find the token address which matches the from and to currencies ticker
@@ -182,6 +184,8 @@ const SwapComponent = ({ onSwap }: { onSwap: Function }) => {
         // console.log("cannot swap: no login in local storage");
         // return "no login in local storage";
       }
+      setIsDeploying(false);
+
     }
     // }
   };
@@ -250,7 +254,14 @@ const SwapComponent = ({ onSwap }: { onSwap: Function }) => {
             />
           </div>
         </div>
-        <button className="swap-button" onClick={handleSwap}>Swap</button>
+        <button className="swap-button" onClick={handleSwap}>          
+        {isDeploying ? (
+            <>
+              <div className="spinner"></div> swap in progres...
+            </>
+          ) : (
+            'Swap'
+          )}</button>
         <Snackbar
           open={snackbar.open}
           onClose={handleClose}

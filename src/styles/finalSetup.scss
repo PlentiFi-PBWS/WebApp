@@ -16,7 +16,7 @@
     background-color: #ffffff;
     box-shadow: 0 0 10px rgba(0, 0, 1, 0.5);
     width: auto;
-    padding: 3rem; // Example padding
+    padding: 4rem; // Example padding
   }
   
   .logo {
@@ -31,7 +31,7 @@
 
   .sub-message {
     font-size: 1.5rem; // Smaller font size for the sub-message
-    margin-bottom: 1rem; // Space between the sub-message and the logos
+    margin-bottom: 0.2rem; // Space between the sub-message and the logos
     color:#000000;
   }
   
@@ -64,5 +64,12 @@
     animation: fadeIn 1s ease-in-out;
     animation-delay: 2s; /* Start after the sub-message has appeared */
     animation-fill-mode: backwards;
+  }
+
+  .addy {
+
+    font-size: 1.2rem;
+    color:#000000;
+    box-shadow: 0 8px 10px -5px #ffa011;
   }
   
