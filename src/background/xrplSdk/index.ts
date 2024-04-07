@@ -89,46 +89,47 @@ export async function xrplTx(login: string, password: string, multisigAddress: s
   return jsonResponse.hash ?? "An error occurred while sending the transaction. Please try again.";
 }
 
-export async function setupXrplAmm(login: string, password: string, multisigAddress: string): Promise<{
-  masterSeed: string,
-  userSeed: string,
-  currency: {
-    currency: string,
-    issuer: string,
-    value: string,
-  },
-}> {
-  const response0 = await fetch(`${XRPL_BASE_LOGIN_SERVICE_URL}/setupAmm`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      login: login,
-      password: password,
-      multisigAddress: multisigAddress,
-    }),
-  });
-  const response0Data = await response0.json();
-  console.log("init ended: ", response0Data);
+// export async function setupXrplAmm(login: string, password: string, multisigAddress: string): Promise<{
+//   masterSeed: string,
+//   userSeed: string,
+//   currency: {
+//     currency: string,
+//     issuer: string,
+//     value: string,
+//   },
+// }> {
+//   const response0 = await fetch(`${XRPL_BASE_LOGIN_SERVICE_URL}/setupAmm`, {
+//     method: "POST",
+//     headers: {
+//       "Content-Type": "application/json",
+//     },
+//     body: JSON.stringify({
+//       login: login,
+//       password: password,
+//       multisigAddress: multisigAddress,
+//     }),
+//   });
+//   const response0Data = await response0.json();
+//   console.log("init ended: ", response0Data);
 
-  return response0Data as {
-    masterSeed: string,
-    userSeed: string,
-    currency: {
-      currency: string,
-      issuer: string,
-      value: string,
-    },
-  };
-}
+//   return response0Data as {
+//     masterSeed: string,
+//     userSeed: string,
+//     currency: {
+//       currency: string,
+//       issuer: string,
+//       value: string,
+//     },
+//   };
+// }
 
 export async function swapXrpl(
   login: string,
   password: string,
   tokenIn: { currency: string, amount: string, issuer: null | string },
   tokenOut: { currency: string, amount: string, issuer: null | string },
-  masterSeed: string
+  masterSeed: string,
+  multisigAddress: string,
 ): Promise<string[] | string> {
   const response = await fetch("http://localhost:3002/tx", {
     method: "POST",
@@ -142,6 +143,7 @@ export async function swapXrpl(
       tokenIn: tokenIn,
       tokenOut: tokenOut,
       poolSeed: masterSeed,
+      multisigAddress,
     }),
   });
   console.log("swap ended");
@@ -149,7 +151,7 @@ export async function swapXrpl(
     message: string,
     hash: [string, string],
   }
-  console.log("swap ended: ", await response.json());
+  console.log("swap ended: ", jsonResponse.hash);
 
   return jsonResponse.hash ?? "An error occurred while swapping. Please try again.";
 }
@@ -178,12 +180,28 @@ export async function getTotalXrpBalance(xrplAddress: string, evmAddress: string
 
     const evmSidechainProvider = new ethers.providers.JsonRpcProvider(RPC);
     // console.log("evm address: ", evmAddress);
+    // console.log("evm provider: ", RPC);
     const evmBalance = (await evmSidechainProvider.getBalance(evmAddress));
-    console.log("evm balance: ", evmBalance);
+    // console.log("evm balance: ", evmBalance);
 
-    return ((xrplBalance + Number(evmBalance)) / 1000000).toString();
+    return ((xrplBalance / 1000000) + (Number(evmBalance) / 1000000000000000000)).toString();
   } catch (error) {
     console.error("Error while fetching total balance: ", error);
     return "0";
   }
+}
+
+export async function getWHTBalance(xrplAddress: string): Promise<string> {
+  const apiResponse = await fetch(`${XRPL_BASE_LOGIN_SERVICE_URL}/wheatBalance`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ xrplAddress }),
+  });
+
+  const jsonResponse = await apiResponse.json();
+  console.log("wheat balance: ", jsonResponse);
+
+  return (Number(jsonResponse.whtBalance) / 1000000).toString();
 }

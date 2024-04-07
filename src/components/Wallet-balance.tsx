@@ -54,7 +54,7 @@ const CryptoBalance = (props: Props) => {
       }
 
       // console.log("Asset owner: ", assetOwner);
-      const evmAddress = await getAddress(assetOwner!);
+      const evmAddress = localStorage.getItem(SMART_ACCOUNT_KEY)!;
 
       const xrpBalance = await getTotalXrpBalance(multiSigAddress, evmAddress);
 

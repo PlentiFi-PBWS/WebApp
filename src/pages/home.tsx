@@ -31,12 +31,12 @@ async function testTx() {
 
 function Home() {
 
-  const [state, setState] = React.useState<State | undefined>(undefined);
   const [stateManager, setStateManager] = React.useState<StateManager | undefined>(undefined);
   const [userAddress, setUserAddress] = React.useState<string | undefined>(undefined);
   const [txUrl, setTxUrl] = useState('');
 
   useEffect(() => {
+    console.log("all local storage: \n", localStorage);
     console.log("local xrpl address: ", localStorage.getItem(XRPL_SMART_ACCOUNT_KEY));
     if (!stateManager) {
       setStateManager(new StateManager());
@@ -45,11 +45,12 @@ function Home() {
 
   useEffect(() => {
     setUserAddress(userAddress ?? '');
-
+    // console.log("azerty: ", localStorage.getItem(SMART_ACCOUNT_KEY));
   }, []);
 
   const handleTestTx = async () => {
     try {
+      console.log('Starting transaction...');
       const txHash = 'await testTx()'; // Wait for the transaction hash
       const url = `https://xrpscan.com/tx/${txHash}`;
       setTxUrl(url); // Save the actual URL in the state
@@ -68,7 +69,6 @@ function Home() {
       .filter((address) => address !== null) // Filter out null values
     : [];
 
-  const data = 'tx hash: 0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef';
   return (
     <div className="App">
       <Sidebar address={addresses.length > 0 ? addresses[0] + "|" + addresses[1] : "no address registered"} name='PlentiFi' />

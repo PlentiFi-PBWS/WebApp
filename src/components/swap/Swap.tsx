@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './SwapComponent.scss';
 import { swap } from '../../background/txSetup';
-import { AMM_CONTRACT, AVAILABLE_TOKENS, LOGIN_KEY, MASTER_SEED_KEY, SMART_ACCOUNT_KEY, XRPL_TOKEN } from '../../constants';
+import { AMM_CONTRACT, AVAILABLE_TOKENS, LOGIN_KEY, MASTER_SEED_KEY, SMART_ACCOUNT_KEY, XRPL_SMART_ACCOUNT_KEY, XRPL_TOKEN } from '../../constants';
 import { useParams } from 'react-router-dom';
 import { log } from 'console';
 import { formatNumber } from '../../utils/tokenAmountToString';
@@ -110,22 +110,21 @@ const SwapComponent = ({ onSwap }: { onSwap: Function }) => {
         const toAmountSecure = toAmount.split('.')[0] + (toAmountDecimals ? '.' + toAmountDecimals : '');
 
         const login = localStorage.getItem(LOGIN_KEY) || '';
-
+        console.log("ppppp: login: ", login);
         if (login) {
+          console.log("ppppp0");
+
           if ((from === 'WHT' && to === 'XRP') || (from === 'XRP' && to === 'WHT')) {
             // HANDLE XRPL SWAP
             const xrp: { currency: string, amount: string, issuer: null | string } = {
               currency: 'XRP',
-              amount: '0',
+              amount: dropsFromXrp(toAmountSecure).toString(),
               issuer: null
             }
-            const xrplToken: { currency: string, amount: string, issuer: null | string } = JSON.parse(localStorage.getItem(XRPL_TOKEN)!);
+            console.log("ppppp01");
+            // const xrplToken: { currency: string, amount: string, issuer: null | string } = JSON.parse(localStorage.getItem(XRPL_TOKEN)!);
+            console.log("ppppp02");
 
-            const login = localStorage.getItem(LOGIN_KEY) || '';
-            if (!login) {
-              console.log("cannot swap: no login in local storage");
-              snackHash = "no login in local storage";
-            }
             const password = 'passwordd'; // todo
             if (from === 'XRP') {
               console.log(1);
@@ -134,11 +133,12 @@ const SwapComponent = ({ onSwap }: { onSwap: Function }) => {
                 password,
                 xrp,
                 {
-                  currency: xrplToken.currency,
+                  currency: "WHT",
                   amount: dropsFromXrp(toAmountSecure).toString(),
-                  issuer: xrplToken.issuer
+                  issuer: "xrplToken.issuer"
                 },
-                localStorage.getItem(MASTER_SEED_KEY)!
+                localStorage.getItem(MASTER_SEED_KEY) ?? '',
+                localStorage.getItem(XRPL_SMART_ACCOUNT_KEY) ?? ''
               ));
               console.log("result: ", result);
               return result;
@@ -148,12 +148,13 @@ const SwapComponent = ({ onSwap }: { onSwap: Function }) => {
                 login,
                 password,
                 {
-                  currency: xrplToken.currency,
+                  currency: "WHT",
                   amount: dropsFromXrp(fromAmountSecure).toString(),
-                  issuer: xrplToken.issuer
+                  issuer: "xrplToken.issuer"
                 },
                 xrp,
-                localStorage.getItem(MASTER_SEED_KEY)!
+                localStorage.getItem(MASTER_SEED_KEY)!,
+                localStorage.getItem(XRPL_SMART_ACCOUNT_KEY)!
               );
             }
           } else {
@@ -169,13 +170,13 @@ const SwapComponent = ({ onSwap }: { onSwap: Function }) => {
             setSnackMsg(snackHash);
             setSnackbar({ ...snackbar, open: true });
             console.log("snackHash1: ", snackHash);
-          } else if (snackHash && Array.isArray(snackHash)){
+          } else if (snackHash && Array.isArray(snackHash)) {
             // join the array of strings with a comma + space
             setSnackMsg((snackHash as string[]).join(', '));
             setSnackbar({ ...snackbar, open: true });
             console.log("snackHash: 2", snackHash);
           }
-      
+
           console.log("snackHash: 3", snackHash);
         }
         // console.log("cannot swap: no login in local storage");
@@ -185,7 +186,7 @@ const SwapComponent = ({ onSwap }: { onSwap: Function }) => {
     // }
   };
 
-  const handleClose = () => { 
+  const handleClose = () => {
     setSnackbar({
       ...snackbar,
       open: false,

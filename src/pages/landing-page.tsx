@@ -6,12 +6,12 @@ import Popup from 'reactjs-popup';
 
 function Lp() {
 
-  useEffect(() => {
-    // clear local storage
-    localStorage.clear();
-    console.log('cleared local storage');
-  }
-  , []);
+  // useEffect(() => {
+  //   // clear local storage
+  //   localStorage.clear();
+  //   console.log('cleared local storage');
+  // }
+  // , []);
 
   let navigate = useNavigate();
   const routeChange = () => {

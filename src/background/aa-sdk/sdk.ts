@@ -4,7 +4,7 @@ import { BUNDLER_BASE_URL, ENTRYPOINT_CONTRACT, LOGIN_KEY, MASTER_SEED_KEY, RPC,
 import entrypoint from './abis/entrypoint.json';
 import walletFactory from './abis/webauthnWalletFactory.json';
 import { ENTROPY } from "../../constants";
-import { setupXrplAmm, XRPLSetupUserAccount } from "../xrplSdk";
+import { XRPLSetupUserAccount } from "../xrplSdk";
 
 
 export const provider = new ethers.providers.StaticJsonRpcProvider(RPC);
@@ -51,11 +51,11 @@ export const deployWallet = async (login: string) => {
   localStorage.setItem(XRPL_SMART_ACCOUNT_KEY, userAccount.multisigAddress);
   localStorage.setItem(LOGIN_KEY, login);
 
-  const ammData = await setupXrplAmm(login, password, userAccount.multisigAddress);
+  // const ammData = await setupXrplAmm(login, password, userAccount.multisigAddress);
   // localStorage.setItem()
-  console.log('xrpl ammData: ', ammData);
-  localStorage.setItem(MASTER_SEED_KEY, ammData.masterSeed);
-  localStorage.setItem(XRPL_TOKEN, JSON.stringify(ammData.currency));
+  // console.log('xrpl ammData: ', ammData);
+  // localStorage.setItem(MASTER_SEED_KEY, ammData.masterSeed);
+  // localStorage.setItem(XRPL_TOKEN, JSON.stringify(ammData.currency));
 
   return json.message;
 };
