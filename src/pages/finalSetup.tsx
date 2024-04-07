@@ -6,7 +6,7 @@ import creditCardLogo from "../assets/icons/credit-card.svg"; // replace with ac
 import binanceLogo from "../assets/icons/binance.png"; // replace with actual path to Binance logo
 import coinbaseLogo from "../assets/icons/coinbase.png"; // replace with actual path to Coinbase logo
 import { getAddress } from "../background/aa-sdk";
-import { XRPL_SMART_ACCOUNT_KEY } from "../constants";
+import { ENTROPY, LOGIN_KEY, XRPL_SMART_ACCOUNT_KEY } from "../constants";
 
 function Setup() {
   let navigate = useNavigate();
@@ -20,8 +20,13 @@ function Setup() {
   useEffect(() => {
     async function fetchAddress() {
       try {
-        const address = await getAddress("login", 0);
+        console.log("local storage: ", localStorage);
+        console.log("login key: ", localStorage.getItem(LOGIN_KEY));
+
+        const address = await getAddress(localStorage.getItem(LOGIN_KEY)!, ENTROPY);
         const xrplAddr = localStorage.getItem(XRPL_SMART_ACCOUNT_KEY);
+
+        console.log("xrpl Address: ", xrplAddr);
         setAddy(address);
         setXrplAddress(xrplAddr || "No XRPL address found");
       } catch (error) {
