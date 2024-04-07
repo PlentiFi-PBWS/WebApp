@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import '../styles/form.scss'; // make sure to create a corresponding SCSS file
 import logo from '../assets/icons/plentifi.png';
 import { deploySmartWallet } from '../background/txSetup';
+import { ACCOUNT_PASSWORD } from '../constants';
 
 function SignUpForm() {
   let navigate = useNavigate();
@@ -49,6 +50,11 @@ function SignUpForm() {
       console.error('Failed to deploy smart wallet:', error);
       // Handle error appropriately
     }
+    // } catch (error) {
+    //   console.error('Failed to deploy smart wallet:', error);
+    //   // Handle error appropriately
+    // }
+    localStorage.setItem(ACCOUNT_PASSWORD, formData.password);
     setIsDeploying(false);
 
   };

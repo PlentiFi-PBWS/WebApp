@@ -5,13 +5,15 @@
     align-items: center; 
     font-size: 16px;
     background-color: #ffffff;
+    border-radius: 15px;
   }
 
 .popup-content {
     text-align: center;
     justify-content : center;
-    border-radius: 10px;
+    border-radius: 15px;
     width: 40%;
+    padding: 10px;
     background-color: #ffffff;
     box-shadow: 0 0 20px #ffa011;
 
@@ -23,6 +25,11 @@
     justify-content : center;
     align-items: center;
     margin-bottom: 15px;
+}
+
+.password-input {
+  margin-top: 30px; // Increase this value to create more space below the text
+
 }
   .modal > .header {
     width: 100%;

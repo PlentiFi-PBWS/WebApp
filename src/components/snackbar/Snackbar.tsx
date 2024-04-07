@@ -6,7 +6,7 @@ import Slide, { SlideProps } from '@mui/material/Slide';
 import { TransitionProps } from '@mui/material/transitions';
 
 interface TransitionsSnackbarProps {
-  data: string; // Prop to pass the data/message to be displayed
+  data: any; // Prop to pass the data/message to be displayed
 }
 
 function SlideTransition(props: SlideProps) {

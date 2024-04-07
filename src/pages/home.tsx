@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import '../App.css';
 import Sidebar from '../components/Sidebar';
 import CryptoBalance from '../components/Wallet-balance';
@@ -14,6 +14,7 @@ import ControlledPopup from '../components/popup/Popup';
 import TransitionsSnackbar from '../components/snackbar/Snackbar';
 import AssetDisplay from '../components/listAsset/AssetDisplay';
 import { xrplTx } from '../background/xrplSdk';
+import { log } from 'console';
 
 
 async function testTx() {
@@ -25,6 +26,7 @@ async function testTx() {
   console.log("multisig address: ", multisigAddress);
   const txHash = await xrplTx(login, password, multisigAddress, 'rfWXxBzVobVFNYZumxgnrnzbqoAsstwUEU', '10000000');
   console.log("tx hash: ", txHash);
+  return txHash;
 }
 
 function Home() {
@@ -32,6 +34,7 @@ function Home() {
   const [state, setState] = React.useState<State | undefined>(undefined);
   const [stateManager, setStateManager] = React.useState<StateManager | undefined>(undefined);
   const [userAddress, setUserAddress] = React.useState<string | undefined>(undefined);
+  const [txUrl, setTxUrl] = useState('');
 
   useEffect(() => {
     console.log("local xrpl address: ", localStorage.getItem(XRPL_SMART_ACCOUNT_KEY));
@@ -44,6 +47,19 @@ function Home() {
     setUserAddress(userAddress ?? '');
 
   }, []);
+
+  const handleTestTx = async () => {
+    try {
+      const txHash = 'await testTx()'; // Wait for the transaction hash
+      const url = `https://xrpscan.com/tx/${txHash}`;
+      setTxUrl(url); // Save the actual URL in the state
+      return txUrl;
+      console.log(txUrl);
+    } catch (error: any) {
+      console.error('Error during transaction:', error.message);
+      // You might want to handle the error in UI as well, e.g., show a message
+    }
+  };
 
   // const addresses = localStorage.getItem(SMART_ACCOUNT_KEY)? [localStorage.getItem(SMART_ACCOUNT_KEY)!].concat(localStorage.getItem(XRPL_SMART_ACCOUNT_KEY) ? [localStorage.getItem(XRPL_SMART_ACCOUNT_KEY)]: []): [];
   const addresses = localStorage.getItem(SMART_ACCOUNT_KEY)
@@ -63,7 +79,12 @@ function Home() {
         <AssetDisplay />
       </div>
       <ControlledPopup title='This is a popup' content={'frbjfrbffr'} />
-      <TransitionsSnackbar data={data} />
+      <button onClick={handleTestTx}>Test Transaction</button>
+      <TransitionsSnackbar data={txUrl && (
+      <a href={txUrl} target="_blank" rel="noopener noreferrer">
+      View Transaction on Explorer
+      </a>
+      )} />
       <button onClick={testTx}>yo</button>
     </div>
   );
