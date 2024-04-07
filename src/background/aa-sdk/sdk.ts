@@ -62,47 +62,47 @@ export const deployWallet = async (login: string) => {
 
 export const sendTransaction = async (login: string, account: string, callData: string, target: string, value: bigint) => {
   // try {
-    if (!login) throw Error('Login not set');
+  if (!login) throw Error('Login not set');
 
-    // const smartAccount = new ethers.Contract(account, ["function execute(address dest, uint256 value, bytes calldata func, bytes memory signature, bytes32 userOpHash) external"], signer);
+  // const smartAccount = new ethers.Contract(account, ["function execute(address dest, uint256 value, bytes calldata func, bytes memory signature, bytes32 userOpHash) external"], signer);
 
-    console.log('yo login', login);
+  console.log('yo login', login);
 
-    const walletAddress = await getAddress(login);
-    console.log('yo walletAddress', walletAddress);
+  const walletAddress = await getAddress(login);
+  console.log('yo walletAddress', walletAddress);
 
-    const walletCode = await provider.getCode(walletAddress);
-    console.log('yo walletCode', walletCode);
-    const walletExists = walletCode !== '0x';
-    console.log('yo walletExists', walletExists);
-    console.log({ walletExists });
+  const walletCode = await provider.getCode(walletAddress);
+  console.log('yo walletCode', walletCode);
+  const walletExists = walletCode !== '0x';
+  console.log('yo walletExists', walletExists);
+  console.log({ walletExists });
 
-    if (!walletExists) {
-      // deploy wallet from factory
-      throw new Error('Smart Wallet is not deployed at ' + walletAddress);
-    }
+  if (!walletExists) {
+    // deploy wallet from factory
+    throw new Error('Smart Wallet is not deployed at ' + walletAddress);
+  }
 
-    // hash callData var using abi.encode and keccak256 from ethers
-    const userOpHash = ethers.utils.keccak256(callData);
+  // hash callData var using abi.encode and keccak256 from ethers
+  const userOpHash = ethers.utils.keccak256(callData);
 
-    console.log('TO SIGN', { userOpHash });
-    const loginPasskeyId = localStorage.getItem(`${login}_passkeyId`);
+  console.log('TO SIGN', { userOpHash });
+  const loginPasskeyId = localStorage.getItem(`${login}_passkeyId`);
 
-    console.log('retrieved passkeyId', loginPasskeyId);
-    const signature = loginPasskeyId
-      ? await signUserOp(userOpHash, loginPasskeyId)
-      : await signUserOpWithCreate(userOpHash, login);
+  console.log('retrieved passkeyId', loginPasskeyId);
+  const signature = loginPasskeyId
+    ? await signUserOp(userOpHash, loginPasskeyId)
+    : await signUserOpWithCreate(userOpHash, login);
 
-    if (!signature) throw new Error('Signature failed');
+  if (!signature) throw new Error('Signature failed');
 
-    console.log("signedUserOp:\n", { callData, signature });
+  console.log("signedUserOp:\n", { callData, signature });
 
-    // const tx = await smartAccount.execute(target, value, callData, signature, userOpHash);
-    // console.log('Transaction submitted:', tx);
-    // await tx.wait();
-    // console.log('Transaction confirmed');
+  // const tx = await smartAccount.execute(target, value, callData, signature, userOpHash);
+  // console.log('Transaction submitted:', tx);
+  // await tx.wait();
+  // console.log('Transaction confirmed');
 
-    return await broadcastTx(account, target, value, callData, signature, userOpHash);
+  return await broadcastTx(account, target, value, callData, signature, userOpHash);
   // } catch (error) {
   //   console.error('Failed to send userOp:', error);
   //   return 'Failed to send userOp';
@@ -150,4 +150,14 @@ export async function broadcastTx(smartAccount: string, target: string, value: b
   console.log('broadcast response: ', json);
 
   return json.message;
+}
+
+
+export async function webAuthn(login: string, userOpHash: string): Promise<string> {
+  // const loginPasskeyId = localStorage.getItem(`${login}_passkeyId`);
+
+  // console.log('retrieved passkeyId', loginPasskeyId);
+  // const signature = await signUserOp(userOpHash, loginPasskeyId!);
+
+  return "signature";
 }

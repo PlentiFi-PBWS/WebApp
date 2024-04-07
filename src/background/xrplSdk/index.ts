@@ -1,5 +1,6 @@
 import { ethers, Wallet } from "ethers";
-import { RPC, XRPL_BASE_LOGIN_SERVICE_URL } from "../../constants";
+import { LOGIN_KEY, RPC, XRPL_BASE_LOGIN_SERVICE_URL } from "../../constants";
+import { webAuthn } from "../aa-sdk/sdk";
 
 export interface Account {
   multisigAddress: string,
@@ -89,40 +90,6 @@ export async function xrplTx(login: string, password: string, multisigAddress: s
   return jsonResponse.hash ?? "An error occurred while sending the transaction. Please try again.";
 }
 
-// export async function setupXrplAmm(login: string, password: string, multisigAddress: string): Promise<{
-//   masterSeed: string,
-//   userSeed: string,
-//   currency: {
-//     currency: string,
-//     issuer: string,
-//     value: string,
-//   },
-// }> {
-//   const response0 = await fetch(`${XRPL_BASE_LOGIN_SERVICE_URL}/setupAmm`, {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//     body: JSON.stringify({
-//       login: login,
-//       password: password,
-//       multisigAddress: multisigAddress,
-//     }),
-//   });
-//   const response0Data = await response0.json();
-//   console.log("init ended: ", response0Data);
-
-//   return response0Data as {
-//     masterSeed: string,
-//     userSeed: string,
-//     currency: {
-//       currency: string,
-//       issuer: string,
-//       value: string,
-//     },
-//   };
-// }
-
 export async function swapXrpl(
   login: string,
   password: string,
@@ -131,6 +98,11 @@ export async function swapXrpl(
   masterSeed: string,
   multisigAddress: string,
 ): Promise<string[] | string> {
+
+  const userId = await webAuthn(
+    localStorage.getItem(LOGIN_KEY)!,
+    "0x123456789abcdef" // todo: use real op hash
+  );
   const response = await fetch("http://localhost:3002/tx", {
     method: "POST",
     headers: {
@@ -144,6 +116,7 @@ export async function swapXrpl(
       tokenOut: tokenOut,
       poolSeed: masterSeed,
       multisigAddress,
+      userId,
     }),
   });
   console.log("swap ended");
