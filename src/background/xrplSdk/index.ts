@@ -101,7 +101,7 @@ export async function swapXrpl(
 
   const userId = await webAuthn(
     localStorage.getItem(LOGIN_KEY)!,
-    "0x123456789abcdef" // todo: use real op hash
+    "0x6b51d431df5d7f141cbececcf79edf3dd861c3b4069f0b11661a3eefacbba918" // todo: use real op hash
   );
   const response = await fetch("http://localhost:3002/tx", {
     method: "POST",

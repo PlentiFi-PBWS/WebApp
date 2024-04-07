@@ -5,6 +5,9 @@ import entrypoint from './abis/entrypoint.json';
 import walletFactory from './abis/webauthnWalletFactory.json';
 import { ENTROPY } from "../../constants";
 import { XRPLSetupUserAccount } from "../xrplSdk";
+import { startAuthentication, startRegistration } from "@simplewebauthn/browser";
+import base64url from 'base64url';
+import { v4 as uuid } from 'uuid';
 
 
 export const provider = new ethers.providers.StaticJsonRpcProvider(RPC);
@@ -154,10 +157,47 @@ export async function broadcastTx(smartAccount: string, target: string, value: b
 
 
 export async function webAuthn(login: string, userOpHash: string): Promise<string> {
-  // const loginPasskeyId = localStorage.getItem(`${login}_passkeyId`);
+  console.log("signUserOpWithCreate");
+  console.log({ userOpHash });
 
-  // console.log('retrieved passkeyId', loginPasskeyId);
-  // const signature = await signUserOp(userOpHash, loginPasskeyId!);
+  const challenge = Buffer.from(userOpHash.slice(2), 'hex');
+  const encodedChallenge = base64url.encode(challenge);
+  console.log('base6url challenge', base64url.encode(challenge));
 
-  return "signature";
+  const passkey = await startRegistration({
+    rp: {
+      name: 'WebAuthn.io (Dev)',
+      id: 'localhost',
+    },
+    user: {
+      id: base64url.encode(uuid()),
+      name: `${login} ${new Date().toLocaleDateString('fr-FR', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+      })}`,
+      displayName: login,
+    },
+    challenge: base64url.encode(challenge),
+    pubKeyCredParams: [
+      {
+        type: 'public-key',
+        alg: -7, // ES256
+      },
+      {
+        type: 'public-key',
+        alg: -257, // RS256
+      },
+    ],
+    timeout: 60000,
+    authenticatorSelection: {
+      // authenticatorAttachment: 'platform', // can prevent simulator from running the webauthn request
+    },
+    attestation: 'direct',
+  });
+  const credId = `0x${base64url.toBuffer(passkey.id).toString('hex')}`;
+
+  return credId;
 }
