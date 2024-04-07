@@ -100,7 +100,7 @@ const Invest = () => {
               currencyName={`$${selectedAsset.chart?.currencyName}`}
               currencyPrice={`$${selectedAsset.chart?.currencyPrice}`}
               icon={<img src={bitcoinIcon} alt="Bitcoin" />}
-              currencyShortName={`$${selectedAsset.chart?.currencyShortName}`}
+              currencyShortName={`${selectedAsset.chart?.currencyShortName}`}
               trend={`$${selectedAsset.chart?.trend}`}
               trendDirection={validTrendDirection}
               chartData={selectedAsset.chart?.chartData ?? []}

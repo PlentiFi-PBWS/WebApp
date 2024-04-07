@@ -19,7 +19,7 @@ export const CryptoChart = (props: Props) =>
     <CryptoCard
     currencyName={props.currencyName}
     currencyPrice={props.currencyPrice}
-    icon={<img src={bitcoinIcon}/>}
+    icon={<p></p>}
     currencyShortName={props.currencyShortName}
     trend={props.trend}
     trendDirection={props.trendDirection}

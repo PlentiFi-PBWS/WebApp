@@ -111,8 +111,8 @@ function Home() {
       <div className="assets">
         <AssetDisplay />
       </div>
-      <ControlledPopup title="This is a popup" content={"frbjfrbffr"} />
-      <button onClick={handleTestTx}>Test Transaction</button>
+      {/* <ControlledPopup title="This is a popup" content={"frbjfrbffr"} /> */}
+      {/* <button onClick={handleTestTx}>Test Transaction</button>
       <TransitionsSnackbar
         data={
           txUrl && (
@@ -122,7 +122,7 @@ function Home() {
           )
         }
       />
-      <button onClick={testTx}>yo</button>
+      <button onClick={testTx}>yo</button> */}
     </div>
   );
 }

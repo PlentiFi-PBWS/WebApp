@@ -196,9 +196,10 @@ const SwapComponent = ({ onSwap }: { onSwap: Function }) => {
         // console.log("cannot swap: no login in local storage");
         // return "no login in local storage";
       }
-      setIsDeploying(false);
 
     }
+    setIsDeploying(false);
+
     // }
   };
 
