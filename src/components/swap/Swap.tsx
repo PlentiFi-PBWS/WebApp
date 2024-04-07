@@ -147,11 +147,13 @@ const SwapComponent = ({ onSwap }: { onSwap: Function }) => {
                 snackHash = result;
                 setSnackMsg(snackHash);
                 setSnackbar({ ...snackbar, open: true })
+                setIsDeploying(false);
                 return result;
               } else if (result && Array.isArray(result)) {
                 snackHash = result.join(', ');
                 setSnackMsg(snackHash);
                 setSnackbar({ ...snackbar, open: true })
+                setIsDeploying(false);
                 return result.join(', ');
               }
             } else if (to === 'XRP') {
