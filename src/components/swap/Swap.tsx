@@ -130,7 +130,7 @@ const SwapComponent = ({ onSwap }: { onSwap: Function }) => {
             const password = 'passwordd'; // todo
             if (from === 'XRP') {
               console.log(1);
-              const result = (await swapXrpl(
+              const result = await swapXrpl(
                 login,
                 password,
                 xrp,
@@ -141,9 +141,19 @@ const SwapComponent = ({ onSwap }: { onSwap: Function }) => {
                 },
                 localStorage.getItem(MASTER_SEED_KEY) ?? '',
                 localStorage.getItem(XRPL_SMART_ACCOUNT_KEY) ?? ''
-              ));
-              console.log("result: ", result);
-              return result;
+              );
+              console.log("result swap: ", result);
+              if (result && typeof result === 'string') {
+                snackHash = result;
+                setSnackMsg(snackHash);
+                setSnackbar({ ...snackbar, open: true })
+                return result;
+              } else if (result && Array.isArray(result)) {
+                snackHash = result.join(', ');
+                setSnackMsg(snackHash);
+                setSnackbar({ ...snackbar, open: true })
+                return result.join(', ');
+              }
             } else if (to === 'XRP') {
               console.log(2);
               snackHash = await swapXrpl(
@@ -254,8 +264,8 @@ const SwapComponent = ({ onSwap }: { onSwap: Function }) => {
             />
           </div>
         </div>
-        <button className="swap-button" onClick={handleSwap}>          
-        {isDeploying ? (
+        <button className="swap-button" onClick={handleSwap}>
+          {isDeploying ? (
             <>
               <div className="spinner"></div> swap in progres...
             </>

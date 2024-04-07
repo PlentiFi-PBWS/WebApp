@@ -126,7 +126,7 @@ export async function swapXrpl(
   }
   console.log("swap ended: ", jsonResponse.hash);
 
-  return jsonResponse.hash ?? "An error occurred while swapping. Please try again.";
+  return jsonResponse.hash;
 }
 
 
