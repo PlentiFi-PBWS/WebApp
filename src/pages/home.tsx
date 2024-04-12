@@ -7,35 +7,11 @@ import TabNavigation from "../components/tab/TabNavigation";
 import { StateManager } from "../background/state";
 import { State } from "../background/state/stateTypes";
 import {
-  LOGIN_KEY,
+  LOGIN_DATA_KEY,
   SMART_ACCOUNT_KEY,
-  XRPL_SMART_ACCOUNT_KEY,
 } from "../constants";
-import Popup from "reactjs-popup";
-import ControlledPopup from "../components/popup/Popup";
-import TransitionsSnackbar from "../components/snackbar/Snackbar";
 import AssetDisplay from "../components/listAsset/AssetDisplay";
-import { xrplTx } from "../background/xrplSdk";
-import { log } from "console";
 
-async function testTx() {
-  console.log("test tx ...");
-  const multisigAddress = localStorage.getItem(XRPL_SMART_ACCOUNT_KEY);
-  const login = localStorage.getItem(LOGIN_KEY),
-    password = "passwordd"; // todo
-  if (!multisigAddress || !login || !password)
-    throw Error("No multisig address found");
-  console.log("multisig address: ", multisigAddress);
-  const txHash = await xrplTx(
-    login,
-    password,
-    multisigAddress,
-    "rfWXxBzVobVFNYZumxgnrnzbqoAsstwUEU",
-    "10000000"
-  );
-  console.log("tx hash: ", txHash);
-  return txHash;
-}
 
 function Home() {
   const [state, setState] = React.useState<State | undefined>(undefined);
@@ -50,7 +26,6 @@ function Home() {
 
   useEffect(() => {
     console.log("all local storage: \n", localStorage);
-    console.log("local xrpl address: ", localStorage.getItem(XRPL_SMART_ACCOUNT_KEY));
     if (!stateManager) {
       setStateManager(new StateManager());
     }
@@ -64,48 +39,20 @@ function Home() {
     setIsPopupOpen(!isPopupOpen);
   };
 
-  const handleTestTx = async () => {
-    try {
-      const txHash = 'await testTx()'; // Wait for the transaction hash
-      const url = `https://xrpscan.com/tx/${txHash}`;
-      setTxUrl(url); // Save the actual URL in the state
-      return txUrl;
-    } catch (error: any) {
-      console.error("Error during transaction:", error.message);
-    }
-  };
-
-  // const addresses = localStorage.getItem(SMART_ACCOUNT_KEY)? [localStorage.getItem(SMART_ACCOUNT_KEY)!].concat(localStorage.getItem(XRPL_SMART_ACCOUNT_KEY) ? [localStorage.getItem(XRPL_SMART_ACCOUNT_KEY)]: []): [];
-  const addresses = localStorage.getItem(SMART_ACCOUNT_KEY)
-    ? [localStorage.getItem(SMART_ACCOUNT_KEY)!]
-        .concat(
-          localStorage.getItem(XRPL_SMART_ACCOUNT_KEY)
-            ? [localStorage.getItem(XRPL_SMART_ACCOUNT_KEY)!]
-            : []
-        )
-        .filter((address) => address !== null) // Filter out null values
-    : [];
+  const address = localStorage.getItem(SMART_ACCOUNT_KEY); // todo: handle multiple addresses
 
   return (
     <div className={`App ${isPopupOpen ? "blur-effect" : ""}`}>
       <Sidebar
-        address={
-          addresses.length > 0
-            ? addresses[0] + "|" + addresses[1]
-            : "no address registered"
-        }
+        address={address ?? "no address registered"}
         name="PlentiFi"
       />
       <Navbar
-        address={addresses.length > 0 ? addresses[0] : "no address registered"}
+        address={address ?? "no address registered"}
         name="testt"
       />
       <CryptoBalance
-        addresses={[
-          addresses.length > 0
-            ? addresses[0] + "|" + addresses[1]
-            : "no address registered",
-        ]}
+        address={address ?? "no address registered"}
       />
       <TabNavigation />
       <div className="assets">

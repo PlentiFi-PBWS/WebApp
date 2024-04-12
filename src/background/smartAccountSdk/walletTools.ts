@@ -8,9 +8,9 @@ import { authResponseToSigVerificationInput } from './debugger/authResponseToSig
 import { decodeAuthenticationCredential } from './debugger/decodeAuthenticationCredential';
 import { decodeRegistrationCredential } from './debugger/decodeRegistrationCredential';
 import { entrypointContract, walletFactoryContract } from './contracts';
-import { provider } from './providers';
-import { LOGIN_SERVICE_PORT } from '../../constants';
-// import { LOGIN_SERVICE_PORT } from './constants';
+import { provider, bundler, /* paymasterProvider */ } from './providers';
+import { ENTRYPOINT_CONTRACT } from '../../constants';
+import { LoginData, loginService } from './sdk';
 
 
 enum SignatureTypes {
@@ -28,12 +28,13 @@ export const getGasLimits = async (
   verificationGasLimit: string;
 }> => {
   console.log('ESTIMATING', userOp);
-  return {
-    callGasLimit: "0x88b8",
-    verificationGasLimit: "0x011170",
-    preVerificationGas: "0x5208",
-  };
-
+  return bundler.send('eth_estimateUserOperationGas', [
+    {
+      ...userOp,
+      verificationGasLimit: 10e6,
+    } as IUserOperation,
+    ENTRYPOINT_CONTRACT,
+  ]);
 };
 
 export const getPaymasterData = async (userOp: IUserOperation): Promise<string> => {
@@ -67,66 +68,16 @@ export const waitForUserOp = async (
   return waitForUserOp(userOpHash, userOp, --maxRetries);
 };
 
+export const sendUserOp = async (userOp: IUserOperation): Promise<ethers.providers.TransactionResponse> => {
+  console.log("yo userOp", userOp)
+  // console.log("yo entrypoint", entrypointContract.address)
+  const userOpHash = await bundler.send('eth_sendUserOperation', [userOp, entrypointContract.address]);
+  return waitForUserOp(userOpHash, userOp);
+};
 
 export const signUserOp = async (userOpHash: string, passkeyIdHex: string): Promise<string> => {
-  // console.log({ userOpHash });
-
-  // const challenge = Buffer.from(userOpHash.slice(2), 'hex');
-  // console.log('base6url challenge', base64url.encode(challenge));
-
-  // const signatureResponse = await startAuthentication({
-  //   challenge: base64url.encode(challenge),
-  //   allowCredentials: [
-  //     {
-  //       id: base64url.encode(Buffer.from(passkeyIdHex.slice(2), 'hex')),
-  //       type: 'public-key',
-  //       transports: ['internal'],
-  //     },
-  //   ],
-  // });
-  // console.log('webauthn response', signatureResponse);
-
-  // const { response: decodedResponse } = decodeAuthenticationCredential(signatureResponse);
-  // console.log('decoded webauthn response', decodedResponse);
-
-  // const ecVerifyInputs = authResponseToSigVerificationInput({}, signatureResponse.response);
-  // console.log('verify inputs', ecVerifyInputs);
-
-  // const challengeOffsetRegex = new RegExp(`(.*)${Buffer.from(base64url.encode(challenge)).toString('hex')}`);
-  // const challengePrefix = challengeOffsetRegex.exec(
-  //   base64url.toBuffer(signatureResponse.response.clientDataJSON).toString('hex'),
-  // )?.[1];
-  // console.log({ challengeOffsetRegex, challengePrefix });
-
-  // console.log('webauthn verify inputs', [
-  //   SignatureTypes.WEBAUTHN_UNPACKED,
-  //   decodedResponse.authenticatorData.flagsMask,
-  //   `0x${base64url.toBuffer(signatureResponse.response.authenticatorData).toString('hex')}`,
-  //   `0x${base64url.toBuffer(signatureResponse.response.clientDataJSON).toString('hex')}`,
-  //   userOpHash,
-  //   Buffer.from(challengePrefix || '', 'hex').length,
-  //   ecVerifyInputs.signature[0],
-  //   ecVerifyInputs.signature[1],
-  //   Buffer.from(passkeyIdHex.slice(2), 'hex').toString('hex'),
-  // ]);
-
-  // return ethers.utils.defaultAbiCoder.encode(
-  //   ['bytes1', 'bytes1', 'bytes', 'bytes', 'bytes', 'uint256', 'uint256', 'uint256', 'bytes'],
-  //   [
-  //     SignatureTypes.WEBAUTHN_UNPACKED,
-  //     decodedResponse.authenticatorData.flagsMask,
-  //     base64url.toBuffer(signatureResponse.response.authenticatorData),
-  //     base64url.toBuffer(signatureResponse.response.clientDataJSON),
-  //     Buffer.from(userOpHash.slice(2), 'hex'),
-  //     Buffer.from(challengePrefix || '', 'hex').length,
-  //     ecVerifyInputs.signature[0],
-  //     ecVerifyInputs.signature[1],
-  //     Buffer.from(passkeyIdHex.slice(2), 'hex'),
-  //   ],
-  // );
-
   console.log({ userOpHash });
-
+  alert("signUserOp");
   const challenge = Buffer.from(userOpHash.slice(2), 'hex');
   console.log('base6url challenge', base64url.encode(challenge));
 
@@ -141,7 +92,7 @@ export const signUserOp = async (userOpHash: string, passkeyIdHex: string): Prom
     ],
   });
   console.log('webauthn response', signatureResponse);
-
+  alert("webauthn response: " + signatureResponse);
   const { response: decodedResponse } = decodeAuthenticationCredential(signatureResponse);
   console.log('decoded webauthn response', decodedResponse);
 
@@ -183,6 +134,7 @@ export const signUserOp = async (userOpHash: string, passkeyIdHex: string): Prom
 };
 
 export const signUserOpWithCreate = async (userOpHash: string, login: string): Promise<string> => {
+  alert("signUserOpWithCreate");
   console.log("signUserOpWithCreate");
   console.log({ userOpHash });
 
@@ -190,10 +142,40 @@ export const signUserOpWithCreate = async (userOpHash: string, login: string): P
   const encodedChallenge = base64url.encode(challenge);
   console.log('base6url challenge', base64url.encode(challenge));
 
+  // const passkey = await startRegistration({
+  //   rp: {
+  //     name: 'WebAuthn.io (Dev)',
+  //     id: 'localhost',
+  //   },
+  //   user: {
+  //     id: base64url.encode(uuid()),
+  //     name: `${login} ${new Date().toLocaleDateString('fr-FR', {
+  //       day: '2-digit',
+  //       month: '2-digit',
+  //       year: 'numeric',
+  //       hour: '2-digit',
+  //       minute: '2-digit',
+  //     })}`,
+  //     displayName: login,
+  //   },
+  //   challenge: base64url.encode(challenge),
+  //   pubKeyCredParams: [
+  //     {
+  //       type: 'public-key',
+  //       alg: -7,
+  //     },
+  //   ],
+  //   timeout: 60000,
+  //   authenticatorSelection: {
+  //     // authenticatorAttachment: 'platform', // can prevent simulator from running the webauthn request
+  //   },
+  //   attestation: 'direct',
+  // });
+
   const passkey = await startRegistration({
     rp: {
       name: 'WebAuthn.io (Dev)',
-      id: 'localhost',
+      // id: 'localhost',
     },
     user: {
       id: base64url.encode(uuid()),
@@ -223,8 +205,10 @@ export const signUserOpWithCreate = async (userOpHash: string, login: string): P
     },
     attestation: 'direct',
   });
+  alert ("yo passkey: " + passkey);
   const credId = `0x${base64url.toBuffer(passkey.id).toString('hex')}`;
-  // localStorage.setItem(`${login}_passkeyId`, credId); /////
+  alert("new credId: " + credId);
+  localStorage.setItem(`${login}_passkeyId`, credId);
   console.log('yo passkeyId', credId);
   // setCustomPasskeyId(login, credId);
   console.log({ credId });
@@ -235,7 +219,7 @@ export const signUserOpWithCreate = async (userOpHash: string, login: string): P
 
   const supportsDirectAttestation = !!decodedPassKey.response.attestationObject.attStmt.sig;
   console.log({ supportsDirectAttestation });
-
+  alert("supportsDirectAttestation: " + supportsDirectAttestation);
   const pubKeyCoordinates = [
     '0x' +
     base64url
@@ -247,16 +231,17 @@ export const signUserOpWithCreate = async (userOpHash: string, login: string): P
       .toString('hex'),
   ];
   console.log('pubKeyCoordinates', pubKeyCoordinates);
-
-  const { data: loginServiceData } = await axios.request({
-    method: 'POST',
-    url: `http://localhost:${LOGIN_SERVICE_PORT}/login`,
-    data: {
-      login,
-      credId,
-      pubKeyCoordinates,
-    },
-  });
+  alert("pubKeyCoordinates: " + pubKeyCoordinates);
+  const loginServiceData = await loginService({ login, credId, pubKeyCoordinates }); // todo: use api
+  // await axios.request({
+  //   method: 'POST',
+  //   url: `http://localhost:${LOGIN_SERVICE_PORT}/login`,
+  //   data: {
+  //     login,
+  //     credId,
+  //     pubKeyCoordinates,
+  //   },
+  // });
 
   if (supportsDirectAttestation) {
     const ecVerifyInputs = authResponseToSigVerificationInput(
@@ -310,8 +295,8 @@ export const signUserOpWithCreate = async (userOpHash: string, login: string): P
   return loginServiceData;
 };
 
-export const getAddress = async (login: string): Promise<string> => {
-  return walletFactoryContract.getAddress(login, 0);
+export const getAddress = async (loginData: LoginData): Promise<string> => {
+  return walletFactoryContract.getAddress(loginData.login, loginData.entropy);
 };
 
 export const userOpToSolidity = (userOp: IUserOperation): string =>

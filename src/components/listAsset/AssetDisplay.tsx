@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react';
 import DynamicTable from './DynamicTable';
 import './AssetDisplay.scss';
-import { provider } from '../../background/aa-sdk/sdk';
+import { provider } from '../../background/smartAccountSdk';
 import { ethers } from 'ethers';
-import { AVAILABLE_TOKENS, SMART_ACCOUNT_KEY, XRPL_SMART_ACCOUNT_KEY } from '../../constants';
-import { getTotalXrpBalance, getWHTBalance } from '../../background/xrplSdk';
+import { AVAILABLE_TOKENS, SMART_ACCOUNT_KEY } from '../../constants';
 
 
 const AssetDisplay = () => {
@@ -39,30 +38,6 @@ const AssetDisplay = () => {
           decimals: tokenData.decimals
         };
       }));
-
-       // add XRP and WHT to the list of assets
-       console.log("XRPL_SMART_ACCOUNT_KEY: ", localStorage.getItem(XRPL_SMART_ACCOUNT_KEY));
-       console.log("assetOwner: ", assetOwner);
-       const xrpBalance = await getTotalXrpBalance(localStorage.getItem(XRPL_SMART_ACCOUNT_KEY)!, assetOwner);
- 
-       assetsData.push({
-         name: "XRP",
-         ticker: "XRP",
-         price: "0.89",
-         amount: xrpBalance,
-         decimals: 6
-       });
- 
-       const whtBalance = await getWHTBalance(localStorage.getItem(XRPL_SMART_ACCOUNT_KEY)!);
- 
-       assetsData.push({
-         name: "WHEAT",
-         ticker: "WHT",
-         price: "73",
-         amount: whtBalance,
-         decimals: 6
-       });
- 
 
       setAssets(assetsData);
       console.log("Assets updated");

@@ -1,16 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import './SwapComponent.scss';
 import { swap } from '../../background/txSetup';
-import { AMM_CONTRACT, AVAILABLE_TOKENS, LOGIN_KEY, MASTER_SEED_KEY, SMART_ACCOUNT_KEY, XRPL_SMART_ACCOUNT_KEY, XRPL_TOKEN } from '../../constants';
+import { AMM_CONTRACT, AVAILABLE_TOKENS, LOGIN_DATA_KEY, SMART_ACCOUNT_KEY } from '../../constants';
 import { useParams } from 'react-router-dom';
-import { log } from 'console';
 import { formatNumber } from '../../utils/tokenAmountToString';
 import { ethers } from 'ethers';
-import { swapXrpl } from '../../background/xrplSdk';
 
 import Snackbar from '@mui/material/Snackbar';
 import Fade from '@mui/material/Fade';
 import { TransitionProps } from '@mui/material/transitions';
+import { LoginData } from '../../background/smartAccountSdk';
 
 const getPrice = (ticker: string) => {
   return AVAILABLE_TOKENS.find(token => token.ticker === ticker)?.price || '1';
@@ -19,7 +18,7 @@ const getPrice = (ticker: string) => {
 const SwapComponent = ({ onSwap }: { onSwap: Function }) => {
   const { asset } = useParams();
   // console.log('asset: ', asset);
-  const [isDeploying, setIsDeploying] = useState(false);
+  const [isDeploying, setIsDeploying] = useState(false); // todo: should be renamed to isSwapping
   const [fromAmount, setFromAmount] = useState('0');
   const [fromCurrency, setFromCurrency] = useState(asset?.toUpperCase() === 'USD' ? 'WBTC' : 'USD');
   const [toAmount, setToAmount] = useState('0');
@@ -43,17 +42,8 @@ const SwapComponent = ({ onSwap }: { onSwap: Function }) => {
       return;
     }
     setFromAmount(e.target.value);
-    if (toCurrency === 'XRP' && fromCurrency === 'WHT') {
-      const fromPrice = 73;
-      const toPrice = 0.89;
-      setToAmount(formatNumber((Number(e.target.value) * fromPrice / toPrice).toString(), 5).toString());
-    } else if (toCurrency === 'WHT' && fromCurrency === 'XRP') {
-      const fromPrice = 0.89;
-      const toPrice = 73;
-      setToAmount(formatNumber((Number(e.target.value) * fromPrice / toPrice).toString(), 5).toString());
-    } else {
-      setToAmount(formatNumber((Number(e.target.value) * Number(getPrice(fromCurrency)) / Number(getPrice(toCurrency))).toString(), 17).toString());
-    }
+
+    setToAmount(formatNumber((Number(e.target.value) * Number(getPrice(fromCurrency)) / Number(getPrice(toCurrency))).toString(), 17).toString());
   };
 
   const handleFromCurrencyChange = (e: any) => {
@@ -67,17 +57,7 @@ const SwapComponent = ({ onSwap }: { onSwap: Function }) => {
       return;
     }
     setToAmount(e.target.value);
-    if (toCurrency === 'XRP' && fromCurrency === 'WHT') {
-      const fromPrice = 73;
-      const toPrice = 0.89;
-      setFromAmount(formatNumber((Number(e.target.value) * toPrice / fromPrice).toString(), 5).toString());
-    } else if (toCurrency === 'WHT' && fromCurrency === 'XRP') {
-      const fromPrice = 0.89;
-      const toPrice = 73;
-      setFromAmount(formatNumber((Number(e.target.value) * toPrice / fromPrice).toString(), 5).toString());
-    } else {
-      setFromAmount(formatNumber((Number(e.target.value) * Number(getPrice(toCurrency)) / Number(getPrice(fromCurrency))).toString(), 17).toString());
-    }
+    setFromAmount(formatNumber((Number(e.target.value) * Number(getPrice(toCurrency)) / Number(getPrice(fromCurrency))).toString(), 17).toString());
   };
 
   const handleToCurrencyChange = (e: any) => {
@@ -95,13 +75,6 @@ const SwapComponent = ({ onSwap }: { onSwap: Function }) => {
       let from = AVAILABLE_TOKENS.find(token => token.ticker.toUpperCase() === fromCurrency.toUpperCase())?.address || '';
       let to = AVAILABLE_TOKENS.find(token => token.ticker.toUpperCase() === toCurrency.toUpperCase())?.address || '';
 
-      if ((fromCurrency.toUpperCase() === 'WHT' && toCurrency.toUpperCase() === 'XRP') || (fromCurrency.toUpperCase() === 'XRP' && toCurrency.toUpperCase() === 'WHT')) {
-        from = fromCurrency.toUpperCase();
-        to = toCurrency.toUpperCase();
-      } else if ((fromCurrency.toUpperCase() !== 'WHT' && toCurrency.toUpperCase() === 'XRP') || (fromCurrency.toUpperCase() !== 'XRP' && toCurrency.toUpperCase() === 'WHT') || (fromCurrency.toUpperCase() === 'WHT' && toCurrency.toUpperCase() !== 'XRP') || (fromCurrency.toUpperCase() === 'XRP' && toCurrency.toUpperCase() !== 'WHT')) {
-        throw new Error('Invalid swap pair: not on the same chain');
-      }
-
       console.log("from: ", from, " to: ", to, " fromAmount: ", fromAmount, " toAmount: ", toAmount);
 
       if (from || to) {
@@ -111,92 +84,33 @@ const SwapComponent = ({ onSwap }: { onSwap: Function }) => {
         const fromAmountSecure = fromAmount.split('.')[0] + (fromAmountDecimals ? '.' + fromAmountDecimals : '');
         const toAmountSecure = toAmount.split('.')[0] + (toAmountDecimals ? '.' + toAmountDecimals : '');
 
-        const login = localStorage.getItem(LOGIN_KEY) || '';
-        console.log("ppppp: login: ", login);
-        if (login) {
+        const loginData = JSON.parse(localStorage.getItem(LOGIN_DATA_KEY) || '{}');
+        console.log("ppppp: login: ", loginData);
+        if (loginData.login !== undefined && loginData.entropy !== undefined) {
           console.log("ppppp0");
-
-          if ((from === 'WHT' && to === 'XRP') || (from === 'XRP' && to === 'WHT')) {
-            // HANDLE XRPL SWAP
-            const xrp: { currency: string, amount: string, issuer: null | string } = {
-              currency: 'XRP',
-              amount: dropsFromXrp(toAmountSecure).toString(),
-              issuer: null
-            }
-            console.log("ppppp01");
-            // const xrplToken: { currency: string, amount: string, issuer: null | string } = JSON.parse(localStorage.getItem(XRPL_TOKEN)!);
-            console.log("ppppp02");
-
-            const password = 'passwordd'; // todo
-            if (from === 'XRP') {
-              console.log(1);
-              const result = await swapXrpl(
-                login,
-                password,
-                xrp,
-                {
-                  currency: "WHT",
-                  amount: dropsFromXrp(toAmountSecure).toString(),
-                  issuer: "xrplToken.issuer"
-                },
-                localStorage.getItem(MASTER_SEED_KEY) ?? '',
-                localStorage.getItem(XRPL_SMART_ACCOUNT_KEY) ?? ''
-              );
-              console.log("result swap: ", result);
-              if (result && typeof result === 'string') {
-                snackHash = result;
-                setSnackMsg(snackHash);
-                setSnackbar({ ...snackbar, open: true })
-                setIsDeploying(false);
-                return result;
-              } else if (result && Array.isArray(result)) {
-                snackHash = result.join(', ');
-                setSnackMsg(snackHash);
-                setSnackbar({ ...snackbar, open: true })
-                setIsDeploying(false);
-                return result.join(', ');
-              }
-            } else if (to === 'XRP') {
-              console.log(2);
-              snackHash = await swapXrpl(
-                login,
-                password,
-                {
-                  currency: "WHT",
-                  amount: dropsFromXrp(fromAmountSecure).toString(),
-                  issuer: "xrplToken.issuer"
-                },
-                xrp,
-                localStorage.getItem(MASTER_SEED_KEY)!,
-                localStorage.getItem(XRPL_SMART_ACCOUNT_KEY)!
-              );
-            }
-          } else {
-            // HANDLE EVM SWAP
-            const txhash = await swap(login, from, to, ethers.utils.parseEther(fromAmountSecure).toBigInt(), ethers.utils.parseEther(toAmountSecure).toBigInt(), smartAccount, AMM_CONTRACT);
-            console.log('swap txhash: ', txhash);
-            console.log("swap values: \tinput: ", ethers.utils.parseEther(fromAmountSecure).toBigInt(), "\toutput: ", ethers.utils.parseEther(toAmountSecure).toBigInt());
-            // SlideTransition('success', 'Swap successful', 'Transaction hash: ' + txhash);
-            snackHash = txhash;
-          }
-
-          if (snackHash && typeof snackHash === 'string') {
-            setSnackMsg(snackHash);
-            setSnackbar({ ...snackbar, open: true });
-            console.log("snackHash1: ", snackHash);
-          } else if (snackHash && Array.isArray(snackHash)) {
-            // join the array of strings with a comma + space
-            setSnackMsg((snackHash as string[]).join(', '));
-            setSnackbar({ ...snackbar, open: true });
-            console.log("snackHash: 2", snackHash);
-          }
-
-          console.log("snackHash: 3", snackHash);
+          // HANDLE EVM SWAP
+          const txhash = await swap(loginData, from, to, ethers.utils.parseEther(fromAmountSecure).toBigInt(), ethers.utils.parseEther(toAmountSecure).toBigInt(), smartAccount, AMM_CONTRACT);
+          console.log('swap txhash: ', txhash);
+          console.log("swap values: \tinput: ", ethers.utils.parseEther(fromAmountSecure).toBigInt(), "\toutput: ", ethers.utils.parseEther(toAmountSecure).toBigInt());
+          // SlideTransition('success', 'Swap successful', 'Transaction hash: ' + txhash);
+          snackHash = txhash;
         }
-        // console.log("cannot swap: no login in local storage");
-        // return "no login in local storage";
-      }
 
+        if (snackHash && typeof snackHash === 'string') {
+          setSnackMsg(snackHash);
+          setSnackbar({ ...snackbar, open: true });
+          console.log("snackHash1: ", snackHash);
+        } else if (snackHash && Array.isArray(snackHash)) {
+          // join the array of strings with a comma + space
+          setSnackMsg((snackHash as string[]).join(', '));
+          setSnackbar({ ...snackbar, open: true });
+          console.log("snackHash: 2", snackHash);
+        }
+
+        console.log("snackHash: 3", snackHash);
+      }
+      // console.log("cannot swap: no login in local storage");
+      // return "no login in local storage";
     }
     setIsDeploying(false);
 
@@ -223,8 +137,6 @@ const SwapComponent = ({ onSwap }: { onSwap: Function }) => {
               defaultValue={fromCurrency}
               onChange={handleFromCurrencyChange}
             >
-              <option key='WHT' value='WHT'>WHT</option>
-              <option key='XRP' value='XRP'>XRP</option>
               {
                 AVAILABLE_TOKENS.map((token) => (
                   <option key={token.ticker} value={token.ticker}>{token.ticker}</option>
@@ -250,8 +162,6 @@ const SwapComponent = ({ onSwap }: { onSwap: Function }) => {
               defaultValue={toCurrency}
               onChange={handleToCurrencyChange}
             >
-              <option key='WHT' value='WHT'>WHT</option>
-              <option key='XRP' value='XRP'>XRP</option>
               {
                 AVAILABLE_TOKENS.map((token) => (
                   <option key={token.ticker} value={token.ticker}>{token.ticker}</option>
@@ -302,32 +212,3 @@ const SwapComponent = ({ onSwap }: { onSwap: Function }) => {
 export default SwapComponent;
 
 
-
-
-
-/**
- * Convert an xrp value to drops
- * 
- * @param xrp - xrp value to convert
- * 
- * @returns - The corresponding drops value
- */
-export function dropsFromXrp(xrp: Number | string): bigint {
-  const xrpDecimals = 6;
-
-  const strXrp: string = typeof xrp === 'string' ? xrp : xrp.toString();
-
-  const [integer, decimals] = strXrp.split('.');
-
-  if (!decimals) {
-    return BigInt(integer) * BigInt(10 ** xrpDecimals);
-  }
-
-  if (decimals.length > xrpDecimals) {
-    throw new Error(`Invalid xrp value: ${xrp} -> too many decimals`);
-  }
-
-  const decimalsPadded = decimals.padEnd(xrpDecimals, '0');
-  console.log("original: ", xrp, "\ninteger: ", integer, "\ndecimals: ", decimals, "\ndecimalsPadded: ", decimalsPadded);
-  return BigInt(`${integer}${decimalsPadded}`);
-}

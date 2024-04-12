@@ -1,19 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { IoIosShareAlt, IoIosSend, IoMdCopy } from "react-icons/io";
 import './Wallet-balance.scss'; // Ensure this is the correct path to your styles
-import { AVAILABLE_TOKENS, LOGIN_KEY, SMART_ACCOUNT_KEY, XRPL_SMART_ACCOUNT_KEY } from '../constants';
+import { AVAILABLE_TOKENS, LOGIN_DATA_KEY, SMART_ACCOUNT_KEY } from '../constants';
 // Importing the WebP image
 import myWebPImage from "../images/pdp.png";
-import { get } from 'http';
 import { ethers } from 'ethers';
-import { provider } from '../background/aa-sdk/providers';
-import { getEthBalance } from '../background/aa-sdk';
-import { getAddress } from '../background/aa-sdk/sdk';
-import { getTotalXrpBalance } from '../background/xrplSdk';
+import { provider } from '../background/smartAccountSdk';
 
 
 type Props = {
-  addresses: string[];
+  address: string;
 };
 
 const CryptoBalance = (props: Props) => {
@@ -24,9 +20,7 @@ const CryptoBalance = (props: Props) => {
 
   // Initialize selectedAddress with the formatted address
   const [selectedAddress, setSelectedAddress] = useState(
-    props.addresses && props.addresses.length > 0
-      ? formatAddress(props.addresses[0])
-      : ''
+    props.address ?? "no address registered"
   );
 
   const onCopyToClipboard = (text: string) => {
@@ -39,26 +33,11 @@ const CryptoBalance = (props: Props) => {
     style: 'currency',
     currency: 'USD'
   }).format(0));
-  const [xrpBalance, setXrpBalance] = useState('0');
 
   useEffect(() => {
     // Define the function that fetches assets
     const fetchAssets = async () => {
       const assetOwner = localStorage.getItem(SMART_ACCOUNT_KEY);
-
-      // Get the asset owner from local storage
-      const multiSigAddress = localStorage.getItem(XRPL_SMART_ACCOUNT_KEY);
-      if (!multiSigAddress) {
-        console.log("Asset owner not set");
-        return;
-      }
-
-      // console.log("Asset owner: ", assetOwner);
-      const evmAddress = localStorage.getItem(SMART_ACCOUNT_KEY)!;
-
-      const xrpBalance = await getTotalXrpBalance(multiSigAddress, evmAddress);
-
-      setXrpBalance(xrpBalance);
 
       if (!assetOwner) {
         console.log("Asset owner not set");
@@ -102,10 +81,6 @@ const CryptoBalance = (props: Props) => {
     setSelectedAddress((event.target.value));
   };
 
-  const XrpTotal = () => {
-    getEthBalance(props.addresses[0])
-  }
-
   // Check if addresses is an array and has more than one address
   const isMultiple = false; // Array.isArray(props.addresses) && props.addresses.length > 1;
 
@@ -117,20 +92,23 @@ const CryptoBalance = (props: Props) => {
       <div className="balance-info">
         {isMultiple ? (
           <div className="address-container">
-            <select className="address-dropdown" value={selectedAddress} onChange={handleAddressChange}>
+            {/* <select className="address-dropdown" value={selectedAddress} onChange={handleAddressChange}>
               {props.addresses.map((addr, index) => (
                 <option key={index} value={addr}>
                   {formatAddress(addr)}
                 </option>
               ))}
-            </select>
+            </select> */}
             <IoMdCopy className="copy-iconn" onClick={() => onCopyToClipboard(selectedAddress)} />
           </div>
         ) : (
-          <div className="address">{localStorage.getItem(LOGIN_KEY) ?? 'No Account set'} <IoMdCopy className="icon" onClick={() => onCopyToClipboard(props.addresses[0])} /></div>
+          <div className="address">{
+            JSON.parse(localStorage.getItem(LOGIN_DATA_KEY) ?? "{}")?.login
+            ?? 'No Account set'
+          } <IoMdCopy className="icon" onClick={() => onCopyToClipboard(props.address)} /></div>
         )}
         <div className="balance">{sum}</div>
-        <div>{xrpBalance} XRP</div>
+        <div>{"todo: get native balance"} ETH</div>
         <div className={`change ${1 >= 0 ? 'positive' : 'negative'}`}>
         </div>
       </div>

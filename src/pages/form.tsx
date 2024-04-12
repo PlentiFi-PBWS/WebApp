@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/form.scss'; // make sure to create a corresponding SCSS file
 import logo from '../assets/icons/plentifi.png';
-import { deploySmartWallet } from '../background/txSetup';
-import { ACCOUNT_PASSWORD } from '../constants';
+import { ACCOUNT_PASSWORD, LOGIN_DATA_KEY } from '../constants';
+import { keccak256 } from 'ethers/lib/utils';
 
 function SignUpForm() {
   let navigate = useNavigate();
@@ -42,18 +42,22 @@ function SignUpForm() {
 
     // deploy and fund account
     setIsDeploying(true);
-    try {
-      await deploySmartWallet(formData.username, true);
+    // try {
+      const { username, name, email, country, age } = formData;
+      const loginData = {
+        login: username,
+        entropy: 0,// keccak256(username + name + email + country + age),
+      };
+
+      localStorage.setItem(LOGIN_DATA_KEY, JSON.stringify(loginData));
+      
       routeChange();
 
-    } catch (error) {
-      console.error('Failed to deploy smart wallet:', error);
-      // Handle error appropriately
-    }
     // } catch (error) {
     //   console.error('Failed to deploy smart wallet:', error);
     //   // Handle error appropriately
     // }
+
     localStorage.setItem(ACCOUNT_PASSWORD, formData.password);
     setIsDeploying(false);
 

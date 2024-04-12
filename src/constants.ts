@@ -1,27 +1,25 @@
-export const LOCAL: boolean = false; // if true, it will use local blockchain, otherwise it will use the testnet
+/* -----------------------------MOCKED----------------------------- */ // todo: unmock
+export const LOGIN_SERVICE_PK="0x799e37f8ffbc46330f906c4dead6d9367eb91c7a7f1eb4eee27ae612bae9950b"; // address: 0xE9890962Af02D626E69A18fdFCC663da502ebe79
+
+/* -----------------------------GENERAL----------------------------- */
+
 /* -----------------------------SDK----------------------------- */
-export const RPC = LOCAL ? 'http://127.0.0.1:7545' : "https://rpc-evm-sidechain.xrpl.org/";
+export const RPC="https://sepolia.infura.io/v3/afbecdcd59884b81a0e460a2f533d055";
+export const BUNDLER="https://public.stackup.sh/api/v1/node/ethereum-sepolia";
+// export const PAYMASTER="https://paymasterURL";
 
-export const ENTRYPOINT_CONTRACT = LOCAL ? '0xD5DFEaAC2c65971C35bdD8d595910a11F19D91dE' : "0x2A1D89DCc1C264FfDBD216F109b06Bf56bf83531"
-export const WALLETFACTORY_CONTRACT = LOCAL ? '0x59A74CFE6d8Bd6283D898DFEA725Aab09738b01A' : "0x90Af0B16fE83C0AE987725D41f04949CB6664702";
-export const WEBAUTHN_CONTRACT = LOCAL ? '0x7DD375f15FF1ca795e1C360983c3f646426aC119' : "0x8554E79514910b8C4ac587137689b5c9bC1be75E"
+export const ENTRYPOINT_CONTRACT="0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789"
+export const WALLET_FACTORY_CONTRACT= "0x1B9554908E5fD36797345b67f6dd0D7Ed5eF06Af";// original: "0x019C256074D423a7dC157d9D9a72D16Bcf47D301"
+export const WEBAUTHN_CONTRACT="0xbBc76f5b09462e397FBA811E1aAa738874bCD839"
 
-export const LOGIN_SERVICE_PORT = 4340
-
-export const ENTROPY = 1234567890;
-export const BUNDLER_BASE_URL = 'http://localhost:3001';
-export const XRPL_BASE_LOGIN_SERVICE_URL = 'http://localhost:3002';
 
 /* -----------------------------STORAGE KEYS----------------------------- */
-export const SMART_ACCOUNT_KEY = "smart_account_key";
-export const XRPL_SMART_ACCOUNT_KEY = "xrpl_smart_account_key";
-export const LOGIN_KEY = "login_key";
-export const XRPL_TOKEN = "xrpl_token";
-export const MASTER_SEED_KEY = "master_seed_key";
+export const SMART_ACCOUNT_KEY = "smart_account_key"; // smart account address // todo: rename??
+export const LOGIN_DATA_KEY = "login_data_key";
 export const ACCOUNT_PASSWORD = "account_password";
 
 /* -----------------------------AVAILABLE TOKENS----------------------------- */
-export const AMM_CONTRACT = LOCAL ? "0x27e3Ce53ddE18E62f8A312648FAC60B6bE48731A" : "0xF0d7935a33b6126115D21Ec49403e4ce378A42Dd";
+export const AMM_CONTRACT = "";
 
 export const AVAILABLE_TOKENS = [
   // prices are mocked for the poc
@@ -29,7 +27,7 @@ export const AVAILABLE_TOKENS = [
     id: 1,
     name: "Bitcoin",
     ticker: "WBTC",
-    address: (LOCAL ? '0x54616B55E6a38a2144d6A90bBed8EDff46701521' : '0xbEeB29483e810290B2610593B30C589672CCE3c8'),
+    address: '0xEF6fd31E3F18a17A07680615DD16974970Ca03A5',
     decimals: 18,
     price: "64000",
     marketCap: "1.2T",
@@ -47,9 +45,9 @@ export const AVAILABLE_TOKENS = [
   },
   {
     id: 2,
-    name: "USD",
-    ticker: "USD",
-    address: (LOCAL ? '0xDdE9C0b43cD8837C61C1968697CE3948804ba71c' : '0xfA41c676566422887f29FD095Fb8E8FdB2396548'),
+    name: "USDT",
+    ticker: "USDT",
+    address: '0x7f9D9e2c5aCEf21d21F08f10cADeD593Cd7bA5ba',
     decimals: 18,
     price: "1",
     marketCap: "95B",
@@ -69,7 +67,7 @@ export const AVAILABLE_TOKENS = [
     id: 3,
     name: "Apple Inc",
     ticker: "APPL",
-    address: (LOCAL ? '0xdCCEf3A4d401c268347AB1Dc6bD90FF459f1Ae0E' : '0x26cA8F4556f2ACDd500F255898710E97Da67825d'),
+    address: '0x8F92ADdD18f25125A7DCD5D388b376646d75B546',
     decimals: 18,
     price: "172",
     marketCap: "500B",
@@ -89,7 +87,7 @@ export const AVAILABLE_TOKENS = [
     id: 4,
     name: "Brent Crude Oil",
     ticker: "BRENT",
-    address: (LOCAL ? '0x51874962f773d7e953dEb0803e0369A10436d422' : '0xaE2274E71f2570d4ed4af0384B061b29Ce4b3F7a'),
+    address: '0xCD2A993b46EeD25762115c3E4004C75E1b5aa974',
     decimals: 18,
     price: "144",
     marketCap: "53M",
@@ -109,7 +107,7 @@ export const AVAILABLE_TOKENS = [
     id: 5,
     name: "21 rue de Berri 75008 Paris, apprt 12",
     ticker: "15 blvrd hssmnn",
-    address: (LOCAL ? '0xDE21f73ad40ed22D723Fe170F1F4cCD08687B6BA' : '0x26F31025D1c0A8a6F6Be75885fCD9A8713e911c7'),
+    address: '0xbBE0Fc4daA3DE0Cb8c8331E526aDaea54A1A3072',
     decimals: 18,
     price: "53",
     description: 'This asset represents a fractional investment in a luxurious apartment located in the 8th arrondissement of Paris. Situated at "21 rue de Berri", this property is in the heart of Paris, a short walk from the Champs-Élysées and Parc Monceau.'
@@ -118,7 +116,7 @@ export const AVAILABLE_TOKENS = [
     id: 6,
     name: "US Treasury Bond 20 years",
     ticker: "USTB20",
-    address: (LOCAL ? '0x190CD0b760699836A3d0210bDeC155e71849c1CE' : '0x4be29fA49717486b44465eBbeFF4b7103A676BDe'),
+    address: '0xE0616E6404bB4F99c2A1C4Db91484E38ee4d53b2',
     decimals: 18,
     price: "14",
     marketCap: "1T",
@@ -138,7 +136,7 @@ export const AVAILABLE_TOKENS = [
     id: 7,
     name: "Gold",
     ticker: "GOLD",
-    address: (LOCAL ? '0x407Dfe12043288a49E55311F078CE5448b3EDC23' : '0xECa9ae3DF171f0EEAC0bA530A92cd6Ef48865D19'),
+    address: '0x90A42De35852d4af5FCB3B5234Be4CAaeC9E0E6A',
     decimals: 18,
     price: "504",
     marketCap: "11T",
