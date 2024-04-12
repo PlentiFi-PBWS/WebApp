@@ -5,7 +5,7 @@ import { AVAILABLE_TOKENS, LOGIN_DATA_KEY, SMART_ACCOUNT_KEY } from '../constant
 // Importing the WebP image
 import myWebPImage from "../images/pdp.png";
 import { ethers } from 'ethers';
-import { provider } from '../background/smartAccountSdk';
+import { provider, SmartAccount } from '../background/smartAccountSdk';
 
 
 type Props = {
@@ -73,16 +73,25 @@ const CryptoBalance = (props: Props) => {
     return () => clearInterval(intervalId);
   }, []); // The empty dependency array ensures this setup is run only once on mount
 
-
-  /////////////////////////////////////////////////
-
-  // Function to handle address selection from the dropdown
-  const handleAddressChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedAddress((event.target.value));
-  };
-
   // Check if addresses is an array and has more than one address
   const isMultiple = false; // Array.isArray(props.addresses) && props.addresses.length > 1;
+
+  ///////////////////////////////////////////////////
+
+  const addSigner = async () => {
+
+    const loginData = JSON.parse(localStorage.getItem(LOGIN_DATA_KEY) ?? "{}");
+
+    const smartAccount = await SmartAccount.new(loginData);
+
+    const credId = "0x123456789",
+      pubKey = ["0x123456789a", "0x123456789b"] as [string, string];
+
+      console.log("addsigner: ", smartAccount.addWebAuthnSigner(credId, pubKey));
+  }
+
+  /////////////////////////////////////////////
+
 
   return (
     <div className="crypto-balance">
@@ -116,6 +125,7 @@ const CryptoBalance = (props: Props) => {
         <button className="action-button"><IoIosShareAlt /></button>
         <button className="action-button"><IoIosSend /></button>
       </div>
+
     </div>
   );
 };

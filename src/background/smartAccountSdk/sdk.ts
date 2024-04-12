@@ -79,8 +79,8 @@ export class SmartAccount implements BaseSmartAccount {
     return new SmartAccount(loginData, address);
   }
 
-  async getAddress() { 
-    return this.address?? await getAddress(this.loginData);
+  async getAddress() {
+    return this.address ?? await getAddress(this.loginData);
   }
 
   /**
@@ -181,20 +181,23 @@ export class SmartAccount implements BaseSmartAccount {
     credId: string,
     pubKeyCoordinates: [string, string]
   ) {
+
     if (!this.address) this.address = await getAddress(this.loginData);
 
-    // todo: update send userOp to directly trigger this function instead
-    const account = new ethers.Contract(
-      this.address,
-      [
-        "function addSigner(bytes calldata credId, uint256[2] calldata pubKeyCoordinates) external onlyOwner"
-      ], provider);
+    const userOpBuilder = new UserOperationBuilder()
+      .useDefaults({
+        sender: this.address,
+      })
+      .useMiddleware(Presets.Middleware.getGasPrice(provider))
+      .setCallData(
+        simpleAccountAbi.encodeFunctionData('addSigner', [
+          credId,
+          pubKeyCoordinates,
+        ]),
+      )
+      .setNonce(await entrypointContract.getNonce(this.address, this.loginData.entropy));
 
-    return await this.execute({
-      targetAddress: this.address,
-      value: '0',
-      callData: account.interface.encodeFunctionData('addSigner', [credId, pubKeyCoordinates])
-    } satisfies UserOp);
+    return await sendUserOperation(this.loginData, userOpBuilder);
   }
 
   /**
