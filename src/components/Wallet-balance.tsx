@@ -125,7 +125,9 @@ const CryptoBalance = (props: Props) => {
         <button className="action-button"><IoIosShareAlt /></button>
         <button className="action-button"><IoIosSend /></button>
       </div>
+        
 
+        <button className="action-button" onClick={addSigner}>Add Signer</button>
     </div>
   );
 };
